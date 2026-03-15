@@ -46,11 +46,11 @@ export const useProduct = (slug: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*, categories(*), profiles!products_vendor_id_fkey(*), product_screenshots(*)")
+        .select("*, categories(*), product_screenshots(*)")
         .eq("slug", slug)
         .single();
       if (error) throw error;
-      return data as Product;
+      return data as unknown as Product;
     },
     enabled: !!slug,
   });
