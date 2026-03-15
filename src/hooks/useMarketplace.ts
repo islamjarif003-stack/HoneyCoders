@@ -14,7 +14,7 @@ export const useProducts = (filters?: { category?: string; query?: string; featu
     queryFn: async () => {
       let q = supabase
         .from("products")
-        .select("*, categories(*), profiles!products_vendor_id_fkey(*), product_screenshots(*)")
+        .select("*, categories(*), product_screenshots(*)")
         .eq("status", "approved")
         .order("created_at", { ascending: false });
 
