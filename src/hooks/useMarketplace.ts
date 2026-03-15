@@ -147,7 +147,7 @@ export const useAdminProducts = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*, categories(*), profiles!products_vendor_id_fkey(display_name)")
+        .select("*, categories(*)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
