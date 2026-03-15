@@ -33,9 +33,9 @@ export const useProducts = (filters?: { category?: string; query?: string; featu
       
       // Filter out products that don't match category join
       if (filters?.category) {
-        return (data as Product[]).filter(p => p.categories?.slug === filters.category);
+        return (data as unknown as Product[]).filter(p => p.categories?.slug === filters.category);
       }
-      return data as Product[];
+      return data as unknown as Product[];
     },
   });
 };
