@@ -4,7 +4,7 @@ import type { Tables } from "@/integrations/supabase/types";
 
 export type Product = Tables<"products"> & {
   categories?: Tables<"categories"> | null;
-  profiles?: Tables<"profiles"> | null;
+  vendor_profile?: Tables<"profiles"> | null;
   product_screenshots?: Tables<"product_screenshots">[];
 };
 
