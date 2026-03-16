@@ -17,10 +17,10 @@ const footerLinks = [
   {
     title: "Support",
     links: [
-      { label: "Contact Us", to: "#" },
-      { label: "FAQ", to: "#" },
-      { label: "Privacy Policy", to: "#" },
-      { label: "Terms of Service", to: "#" },
+      { label: "Contact Us", to: "/page/contact" },
+      { label: "FAQ", to: "/page/faq" },
+      { label: "Privacy Policy", to: "/page/privacy" },
+      { label: "Terms of Service", to: "/page/terms" },
       { label: "Sell Products", to: "/vendor" },
     ],
   },
