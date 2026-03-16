@@ -5,7 +5,6 @@ import path from "path";
 import fs from "fs";
 
 dotenv.config();
-
 import authRoutes from "./routes/auth";
 import productRoutes from "./routes/products";
 import categoryRoutes from "./routes/categories";
@@ -45,6 +44,21 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 SourceStack API running on http://localhost:${PORT}`);
+  
+  // Auto-initialize DB schema
+  try {
+    import('./db').then(async ({ pool }) => {
+      try {
+        const schema = fs.readFileSync(path.join(process.cwd(), "schema.sql"), "utf8");
+        await pool.query(schema);
+        console.log("✅ Database schema synchronized.");
+      } catch (err) {
+        console.error("❌ Failed to synchronize database schema:", err);
+      }
+    });
+  } catch (err) {
+    console.warn("Could not import DB for auto-initialization.");
+  }
 });
