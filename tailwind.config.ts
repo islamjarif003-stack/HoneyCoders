@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Geist", "IBM Plex Sans", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "IBM Plex Sans", "system-ui", "sans-serif"],
         body: ["IBM Plex Sans", "system-ui", "sans-serif"],
       },
       colors: {
