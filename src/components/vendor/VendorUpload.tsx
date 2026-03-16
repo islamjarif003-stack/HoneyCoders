@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { apiUpload } from "@/lib/api";
 import { useCategories } from "@/hooks/useMarketplace";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -29,16 +29,6 @@ const VendorUpload = () => {
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
-  const generateSlug = (text: string) =>
-    text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + "-" + Date.now().toString(36);
-
-  const uploadFile = async (file: File, bucket: string, path: string) => {
-    const { error } = await supabase.storage.from(bucket).upload(path, file);
-    if (error) throw error;
-    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-    return data.publicUrl;
-  };
-
   const handleSubmit = async (e: React.FormEvent, asDraft: boolean) => {
     e.preventDefault();
     if (!user) return;
@@ -47,46 +37,20 @@ const VendorUpload = () => {
 
     setSubmitting(true);
     try {
-      const slug = generateSlug(title);
-      let thumbnailUrl: string | null = null;
-      let fileUrl: string | null = null;
+      const formData = new FormData();
+      formData.append("title", title.trim());
+      formData.append("description", description.trim());
+      formData.append("price", price);
+      formData.append("category_id", categoryId);
+      formData.append("version", version);
+      formData.append("tags", tags);
+      formData.append("status", asDraft ? "draft" : "pending");
 
-      if (thumbnail) {
-        thumbnailUrl = await uploadFile(thumbnail, "product-images", `thumbnails/${user.id}/${slug}-${thumbnail.name}`);
-      }
-      if (productFile) {
-        const { error } = await supabase.storage.from("product-files").upload(`${user.id}/${slug}-${productFile.name}`, productFile);
-        if (error) throw error;
-        fileUrl = `${user.id}/${slug}-${productFile.name}`;
-      }
+      if (thumbnail) formData.append("thumbnail", thumbnail);
+      if (productFile) formData.append("product_file", productFile);
+      screenshots.forEach((ss) => formData.append("screenshots", ss));
 
-      const { data: product, error } = await supabase.from("products").insert({
-        title: title.trim(),
-        slug,
-        description: description.trim() || null,
-        price: Number(price),
-        category_id: categoryId || null,
-        vendor_id: user.id,
-        version,
-        tags: tags ? tags.split(",").map(t => t.trim()).filter(Boolean) : [],
-        thumbnail_url: thumbnailUrl,
-        file_url: fileUrl,
-        status: asDraft ? "draft" as any : "pending" as any,
-      }).select().single();
-
-      if (error) throw error;
-
-      // Upload screenshots
-      if (screenshots.length > 0 && product) {
-        for (let i = 0; i < screenshots.length; i++) {
-          const ssUrl = await uploadFile(screenshots[i], "product-images", `screenshots/${user.id}/${slug}-ss-${i}-${screenshots[i].name}`);
-          await supabase.from("product_screenshots").insert({
-            product_id: product.id,
-            url: ssUrl,
-            sort_order: i,
-          });
-        }
-      }
+      await apiUpload("/vendor/products", formData);
 
       toast.success(asDraft ? "Saved as draft" : "Product submitted for review");
       queryClient.invalidateQueries({ queryKey: ["vendor-products"] });
@@ -124,7 +88,7 @@ const VendorUpload = () => {
             <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
               <SelectContent>
-                {categories?.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                {categories?.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>

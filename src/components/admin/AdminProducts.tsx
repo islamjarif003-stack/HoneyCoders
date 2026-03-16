@@ -1,7 +1,7 @@
 import { CheckCircle2, XCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAdminProducts } from "@/hooks/useMarketplace";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
@@ -20,11 +20,12 @@ const AdminProducts = () => {
   const queryClient = useQueryClient();
 
   const handleStatus = async (id: string, status: "approved" | "rejected") => {
-    const { error } = await supabase.from("products").update({ status: status as any }).eq("id", id);
-    if (error) toast.error("Failed to update");
-    else {
+    try {
+      await api(`/admin/products/${id}/status`, { method: "PATCH", body: { status } });
       toast.success(`Product ${status}`);
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+    } catch {
+      toast.error("Failed to update");
     }
   };
 
@@ -46,10 +47,10 @@ const AdminProducts = () => {
           <TableBody>
             {isLoading ? (
               <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Loading...</TableCell></TableRow>
-            ) : products?.length ? products.map((p) => (
+            ) : products?.length ? products.map((p: any) => (
               <TableRow key={p.id}>
                 <TableCell className="font-medium">{p.title}</TableCell>
-                <TableCell className="text-muted-foreground">{(p as any).categories?.name || "—"}</TableCell>
+                <TableCell className="text-muted-foreground">{p.categories?.name || "—"}</TableCell>
                 <TableCell className="tabular-nums">${p.price}</TableCell>
                 <TableCell>
                   <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-medium ${statusColor[p.status] || ""}`}>

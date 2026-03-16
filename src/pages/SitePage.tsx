@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import Navbar from "@/components/marketplace/Navbar";
 import Footer from "@/components/marketplace/Footer";
 import { motion } from "framer-motion";
@@ -10,16 +10,7 @@ const SitePage = () => {
 
   const { data: page, isLoading } = useQuery({
     queryKey: ["site-page", slug],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("site_pages")
-        .select("*")
-        .eq("slug", slug!)
-        .eq("is_published", true)
-        .single();
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => api(`/pages/${slug}`),
     enabled: !!slug,
   });
 
@@ -32,7 +23,6 @@ const SitePage = () => {
         if (line.startsWith("- ")) return <li key={i} className="ml-4 text-muted-foreground">{line.slice(2)}</li>;
         if (line.startsWith("**") && line.endsWith("**")) return <p key={i} className="font-semibold text-foreground">{line.slice(2, -2)}</p>;
         if (line.trim() === "") return <br key={i} />;
-        // Handle inline bold
         const parts = line.split(/(\*\*[^*]+\*\*)/g);
         return (
           <p key={i} className="text-muted-foreground leading-relaxed">
@@ -57,11 +47,7 @@ const SitePage = () => {
             <div className="h-4 w-3/4 animate-pulse rounded bg-muted shimmer" />
           </div>
         ) : page ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <h1 className="mb-8 font-display text-3xl font-bold md:text-4xl">{page.title}</h1>
             <div className="prose-dark space-y-1">
               {renderMarkdown(page.content)}

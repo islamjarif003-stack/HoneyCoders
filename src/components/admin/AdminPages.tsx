@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,23 +29,12 @@ const AdminPages = () => {
 
   const { data: pages, isLoading } = useQuery({
     queryKey: ["admin-site-pages"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("site_pages")
-        .select("*")
-        .order("created_at", { ascending: true });
-      if (error) throw error;
-      return data as SitePage[];
-    },
+    queryFn: () => api<SitePage[]>("/admin/pages"),
   });
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, title, content, is_published }: { id: string; title: string; content: string; is_published: boolean }) => {
-      const { error } = await supabase
-        .from("site_pages")
-        .update({ title, content, is_published })
-        .eq("id", id);
-      if (error) throw error;
+      await api(`/admin/pages/${id}`, { method: "PUT", body: { title, content, is_published } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-site-pages"] });
@@ -59,11 +48,7 @@ const AdminPages = () => {
 
   const togglePublish = useMutation({
     mutationFn: async ({ id, is_published }: { id: string; is_published: boolean }) => {
-      const { error } = await supabase
-        .from("site_pages")
-        .update({ is_published })
-        .eq("id", id);
-      if (error) throw error;
+      await api(`/admin/pages/${id}`, { method: "PUT", body: { is_published } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-site-pages"] });

@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { useAllUsers } from "@/hooks/useAdmin";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { ShieldCheck, ShieldOff, KeyRound, Trash2, UserCheck, UserX } from "lucide-react";
 
 const callAdminApi = async (body: Record<string, any>) => {
-  const { data: { session } } = await supabase.auth.getSession();
-  const res = await supabase.functions.invoke("admin-users", { body });
-  if (res.error) throw new Error(res.error.message);
-  if (res.data?.error) throw new Error(res.data.error);
-  return res.data;
+  return api("/admin/users/action", { method: "POST", body });
 };
 
 const AdminUsers = () => {

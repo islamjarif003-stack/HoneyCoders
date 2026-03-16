@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,27 +17,30 @@ const VendorSettings = () => {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("profiles").select("*").eq("user_id", user.id).single().then(({ data }) => {
-      if (data) {
-        setDisplayName(data.display_name || "");
-        setBio(data.bio || "");
-        setAvatarUrl(data.avatar_url || "");
-      }
+    api("/auth/me").then((data) => {
+      setDisplayName(data.display_name || "");
+      setBio(data.bio || "");
+      setAvatarUrl(data.avatar_url || "");
       setLoading(false);
-    });
+    }).catch(() => setLoading(false));
   }, [user]);
 
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
-    const { error } = await supabase.from("profiles").update({
-      display_name: displayName.trim() || null,
-      bio: bio.trim() || null,
-      avatar_url: avatarUrl.trim() || null,
-    }).eq("user_id", user.id);
-
-    if (error) toast.error("Failed to save");
-    else toast.success("Profile updated");
+    try {
+      await api("/profile", {
+        method: "PUT",
+        body: {
+          display_name: displayName.trim() || null,
+          bio: bio.trim() || null,
+          avatar_url: avatarUrl.trim() || null,
+        },
+      });
+      toast.success("Profile updated");
+    } catch {
+      toast.error("Failed to save");
+    }
     setSaving(false);
   };
 

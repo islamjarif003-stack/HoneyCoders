@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -14,22 +14,24 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) toast.error(error.message);
-      else { toast.success("Welcome back!"); navigate("/"); }
-    } else {
-      const { error } = await supabase.auth.signUp({
-        email, password,
-        options: { data: { display_name: displayName }, emailRedirectTo: window.location.origin },
-      });
-      if (error) toast.error(error.message);
-      else toast.success("Account created! Check your email to verify.");
+    try {
+      if (isLogin) {
+        await signIn(email, password);
+        toast.success("Welcome back!");
+        navigate("/");
+      } else {
+        await signUp(email, password, displayName);
+        toast.success("Account created! You can now sign in.");
+        setIsLogin(true);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong");
     }
     setLoading(false);
   };
