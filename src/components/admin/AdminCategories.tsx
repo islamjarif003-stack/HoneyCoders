@@ -3,7 +3,7 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/hooks/useMarketplace";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
@@ -31,29 +31,31 @@ const AdminCategories = () => {
 
   const handleSave = async () => {
     if (!form.name || !form.slug) { toast.error("Name and slug required"); return; }
-    if (editId) {
-      const { error } = await supabase.from("categories").update({
-        name: form.name, slug: form.slug, icon: form.icon || null, sort_order: form.sort_order,
-      }).eq("id", editId);
-      if (error) toast.error("Failed to update");
-      else toast.success("Category updated");
-    } else {
-      const { error } = await supabase.from("categories").insert({
-        name: form.name, slug: form.slug, icon: form.icon || null, sort_order: form.sort_order,
-      });
-      if (error) toast.error("Failed to create");
-      else toast.success("Category created");
+    try {
+      if (editId) {
+        await api(`/admin/categories/${editId}`, { method: "PUT", body: { name: form.name, slug: form.slug, icon: form.icon || null, sort_order: form.sort_order } });
+        toast.success("Category updated");
+      } else {
+        await api("/admin/categories", { method: "POST", body: { name: form.name, slug: form.slug, icon: form.icon || null, sort_order: form.sort_order } });
+        toast.success("Category created");
+      }
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      setOpen(false);
+      resetForm();
+    } catch {
+      toast.error("Failed to save");
     }
-    queryClient.invalidateQueries({ queryKey: ["categories"] });
-    setOpen(false);
-    resetForm();
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this category?")) return;
-    const { error } = await supabase.from("categories").delete().eq("id", id);
-    if (error) toast.error("Failed to delete");
-    else { toast.success("Category deleted"); queryClient.invalidateQueries({ queryKey: ["categories"] }); }
+    try {
+      await api(`/admin/categories/${id}`, { method: "DELETE" });
+      toast.success("Category deleted");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    } catch {
+      toast.error("Failed to delete");
+    }
   };
 
   return (
@@ -77,7 +79,7 @@ const AdminCategories = () => {
           <TableBody>
             {isLoading ? (
               <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Loading...</TableCell></TableRow>
-            ) : categories?.length ? categories.map((c) => (
+            ) : categories?.length ? categories.map((c: any) => (
               <TableRow key={c.id}>
                 <TableCell className="text-xl">{c.icon || "📦"}</TableCell>
                 <TableCell className="font-medium">{c.name}</TableCell>

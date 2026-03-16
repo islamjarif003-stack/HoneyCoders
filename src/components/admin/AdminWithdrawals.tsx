@@ -1,5 +1,5 @@
 import { useAdminWithdrawals } from "@/hooks/useAdmin";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,13 @@ const AdminWithdrawals = () => {
   const queryClient = useQueryClient();
 
   const handleStatus = async (id: string, status: "approved" | "rejected" | "paid") => {
-    const { error } = await supabase.from("withdrawals").update({ status: status as any }).eq("id", id);
-    if (error) toast.error("Failed to update");
-    else { toast.success(`Withdrawal ${status}`); queryClient.invalidateQueries({ queryKey: ["admin-withdrawals"] }); }
+    try {
+      await api(`/admin/withdrawals/${id}/status`, { method: "PATCH", body: { status } });
+      toast.success(`Withdrawal ${status}`);
+      queryClient.invalidateQueries({ queryKey: ["admin-withdrawals"] });
+    } catch {
+      toast.error("Failed to update");
+    }
   };
 
   return (
@@ -41,7 +45,7 @@ const AdminWithdrawals = () => {
           <TableBody>
             {isLoading ? (
               <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Loading...</TableCell></TableRow>
-            ) : withdrawals?.length ? withdrawals.map((w) => (
+            ) : withdrawals?.length ? withdrawals.map((w: any) => (
               <TableRow key={w.id}>
                 <TableCell className="font-mono text-xs text-muted-foreground">{w.id.slice(0, 8)}...</TableCell>
                 <TableCell className="tabular-nums font-medium">${w.amount}</TableCell>

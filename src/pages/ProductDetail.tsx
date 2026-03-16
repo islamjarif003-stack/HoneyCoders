@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { products as mockProducts } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -35,10 +35,16 @@ const ProductDetail = () => {
   const handleWishlist = async () => {
     if (!user) { toast.error("Please sign in"); navigate("/auth"); return; }
     if (isDbProduct) {
-      const { error } = await supabase.from("wishlists").insert({ user_id: user.id, product_id: dbProduct.id });
-      if (error?.code === "23505") toast.info("Already in wishlist");
-      else if (error) toast.error("Failed");
-      else toast.success("Added to wishlist!");
+      try {
+        await api("/wishlists", { method: "POST", body: { product_id: dbProduct.id } });
+        toast.success("Added to wishlist!");
+      } catch (err: any) {
+        if (err.message?.includes("duplicate") || err.message?.includes("already")) {
+          toast.info("Already in wishlist");
+        } else {
+          toast.error("Failed");
+        }
+      }
     }
   };
 
@@ -145,7 +151,7 @@ const ProductDetail = () => {
             <div className="mt-10">
               <h2 className="mb-4 font-display text-lg font-semibold">Reviews ({reviewCount})</h2>
               <div className="space-y-4">
-                {reviews?.map((review, i) => (
+                {reviews?.map((review: any, i: number) => (
                   <motion.div
                     key={review.id}
                     className="rounded-xl border border-border bg-card p-5 shadow-ink"
@@ -156,9 +162,9 @@ const ProductDetail = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 items-center justify-center rounded-full gradient-primary text-xs font-bold text-primary-foreground">
-                          {((review as any).profiles?.display_name || "U")[0].toUpperCase()}
+                          {(review.profiles?.display_name || "U")[0].toUpperCase()}
                         </div>
-                        <span className="text-sm font-medium">{(review as any).profiles?.display_name || "User"}</span>
+                        <span className="text-sm font-medium">{review.profiles?.display_name || "User"}</span>
                       </div>
                       <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
                     </div>
