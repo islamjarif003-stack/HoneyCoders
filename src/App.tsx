@@ -40,6 +40,8 @@ const App = () => (
             <Route path="/library" element={<UserLibrary />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/page/:slug" element={<SitePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
