@@ -13,8 +13,22 @@ const Auth = () => {
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resending, setResending] = useState(false);
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
+
+  const handleResend = async () => {
+    setResending(true);
+    try {
+      await api("/auth/resend-verification", { method: "POST", body: { email: resendEmail } });
+      toast.success("Verification email sent! Check your inbox.");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to resend");
+    }
+    setResending(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
