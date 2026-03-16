@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Geist", "IBM Plex Sans", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "IBM Plex Sans", "system-ui", "sans-serif"],
         body: ["IBM Plex Sans", "system-ui", "sans-serif"],
       },
       colors: {
@@ -28,6 +28,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -92,6 +93,8 @@ export default {
         ink: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
         premium: "0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
         soft: "0 1px 2px rgba(0,0,0,0.05), 0 4px 6px -1px rgba(0,0,0,0.02), 0 10px 15px -3px rgba(0,0,0,0.03)",
+        glow: "0 0 20px -5px hsl(239 84% 67% / 0.25)",
+        elevated: "0 10px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -4px rgba(0, 0, 0, 0.04)",
       },
       keyframes: {
         "accordion-down": {

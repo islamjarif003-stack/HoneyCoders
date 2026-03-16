@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Star, Download, ShieldCheck, ArrowLeft, Heart, Share2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { Star, Download, ShieldCheck, ArrowLeft, Heart, Share2, Sparkles, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import Navbar from "@/components/marketplace/Navbar";
 import Footer from "@/components/marketplace/Footer";
@@ -18,11 +18,9 @@ const ProductDetail = () => {
   const { data: dbProduct, isLoading } = useProduct(slug || "");
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Fallback to mock data
   const mockProduct = mockProducts.find(p => p.slug === slug);
   const product = dbProduct || mockProduct;
   const isDbProduct = !!dbProduct;
-
   const { data: reviews } = useReviews(dbProduct?.id || "");
 
   const screenshots = isDbProduct
@@ -30,24 +28,16 @@ const ProductDetail = () => {
     : (mockProduct?.screenshots || []);
 
   const handleBuy = () => {
-    if (!user) {
-      toast.error("Please sign in to purchase");
-      navigate("/auth");
-      return;
-    }
+    if (!user) { toast.error("Please sign in to purchase"); navigate("/auth"); return; }
     navigate(`/checkout/${isDbProduct ? dbProduct.id : ""}`);
   };
 
   const handleWishlist = async () => {
-    if (!user) {
-      toast.error("Please sign in to add to wishlist");
-      navigate("/auth");
-      return;
-    }
+    if (!user) { toast.error("Please sign in"); navigate("/auth"); return; }
     if (isDbProduct) {
       const { error } = await supabase.from("wishlists").insert({ user_id: user.id, product_id: dbProduct.id });
-      if (error?.code === "23505") toast.info("Already in your wishlist");
-      else if (error) toast.error("Failed to add to wishlist");
+      if (error?.code === "23505") toast.info("Already in wishlist");
+      else if (error) toast.error("Failed");
       else toast.success("Added to wishlist!");
     }
   };
@@ -57,7 +47,10 @@ const ProductDetail = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="container py-8">
-          <div className="h-96 animate-pulse rounded-lg bg-muted" />
+          <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
+            <div className="h-96 animate-pulse rounded-xl bg-muted shimmer" />
+            <div className="h-80 animate-pulse rounded-xl bg-muted shimmer" />
+          </div>
         </div>
       </div>
     );
@@ -92,49 +85,81 @@ const ProductDetail = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container py-8">
-        <Link to="/products" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to products
-        </Link>
+        <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+          <Link to="/products" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground group">
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to products
+          </Link>
+        </motion.div>
 
         <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-            <div className="overflow-hidden rounded-lg border border-border shadow-ink">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <div className="overflow-hidden rounded-xl border border-border shadow-elevated">
               <div className="relative aspect-[16/10]">
-                <img src={screenshots[selectedImage] || thumbnail || "/placeholder.svg"} alt={title} className="h-full w-full object-cover" />
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={selectedImage}
+                    src={screenshots[selectedImage] || thumbnail || "/placeholder.svg"}
+                    alt={title}
+                    className="h-full w-full object-cover"
+                    initial={{ opacity: 0, scale: 1.02 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </AnimatePresence>
                 <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-foreground/5" />
               </div>
             </div>
             {screenshots.length > 1 && (
               <div className="mt-4 flex gap-3">
                 {screenshots.map((ss, i) => (
-                  <button
+                  <motion.button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`overflow-hidden rounded-md border-2 transition-colors ${i === selectedImage ? "border-primary" : "border-border"}`}
+                    className={`overflow-hidden rounded-lg border-2 transition-all duration-300 ${i === selectedImage ? "border-primary shadow-glow" : "border-border hover:border-primary/30"}`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
                     <img src={ss} alt="" className="h-16 w-24 object-cover" />
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             )}
 
-            <div className="mt-10">
+            <motion.div className="mt-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
               <h2 className="mb-4 font-display text-lg font-semibold">Description</h2>
               <p className="text-[15px] leading-relaxed text-muted-foreground">{description}</p>
               <div className="mt-6 flex flex-wrap gap-2">
                 {tags.map((tag) => (
-                  <span key={tag} className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">{tag}</span>
+                  <motion.span
+                    key={tag}
+                    className="rounded-full border border-border bg-muted/50 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    {tag}
+                  </motion.span>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             <div className="mt-10">
               <h2 className="mb-4 font-display text-lg font-semibold">Reviews ({reviewCount})</h2>
               <div className="space-y-4">
-                {reviews?.map((review) => (
-                  <div key={review.id} className="rounded-lg border border-border bg-card p-4">
+                {reviews?.map((review, i) => (
+                  <motion.div
+                    key={review.id}
+                    className="rounded-xl border border-border bg-card p-5 shadow-ink"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">{(review as any).profiles?.display_name || "User"}</span>
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full gradient-primary text-xs font-bold text-primary-foreground">
+                          {((review as any).profiles?.display_name || "U")[0].toUpperCase()}
+                        </div>
+                        <span className="text-sm font-medium">{(review as any).profiles?.display_name || "User"}</span>
+                      </div>
                       <span className="text-xs text-muted-foreground">{new Date(review.created_at).toLocaleDateString()}</span>
                     </div>
                     <div className="mt-2 flex gap-0.5">
@@ -143,7 +168,7 @@ const ProductDetail = () => {
                       ))}
                     </div>
                     {review.comment && <p className="mt-2 text-sm text-muted-foreground">{review.comment}</p>}
-                  </div>
+                  </motion.div>
                 ))}
                 {(!reviews || reviews.length === 0) && !isDbProduct && (
                   <>
@@ -151,10 +176,16 @@ const ProductDetail = () => {
                       { name: "Alex M.", rating: 5, comment: "Excellent quality, saved me weeks of development time.", date: "Mar 8, 2026" },
                       { name: "Sarah K.", rating: 4, comment: "Great components. Minor issues with dark mode but vendor fixed quickly.", date: "Feb 22, 2026" },
                     ].map((review, i) => (
-                      <div key={i} className="rounded-lg border border-border bg-card p-4">
+                      <motion.div
+                        key={i}
+                        className="rounded-xl border border-border bg-card p-5 shadow-ink"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                      >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-50 text-sm font-semibold text-primary">{review.name[0]}</div>
+                          <div className="flex items-center gap-2.5">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full gradient-primary text-xs font-bold text-primary-foreground">{review.name[0]}</div>
                             <span className="text-sm font-medium">{review.name}</span>
                           </div>
                           <span className="text-xs text-muted-foreground">{review.date}</span>
@@ -165,7 +196,7 @@ const ProductDetail = () => {
                           ))}
                         </div>
                         <p className="mt-2 text-sm text-muted-foreground">{review.comment}</p>
-                      </div>
+                      </motion.div>
                     ))}
                   </>
                 )}
@@ -174,10 +205,15 @@ const ProductDetail = () => {
           </motion.div>
 
           <div>
-            <div className="sticky top-24 space-y-6">
-              <div className="rounded-lg border border-border bg-card p-6 shadow-soft">
+            <motion.div
+              className="sticky top-24 space-y-5"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="rounded-2xl border border-border bg-card p-6 shadow-elevated gradient-border">
                 <h1 className="font-display text-xl font-bold">{title}</h1>
-                <div className="mt-2 flex items-center gap-2">
+                <div className="mt-2.5 flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                     <span className="text-sm font-medium tabular-nums">{rating || "—"}</span>
@@ -186,27 +222,53 @@ const ProductDetail = () => {
                   <span className="text-xs text-muted-foreground">·</span>
                   <span className="text-xs tabular-nums text-muted-foreground">{Number(salesCount).toLocaleString()} sales</span>
                 </div>
-                <div className="mt-6 text-3xl font-bold tabular-nums">${price}</div>
-                <Button size="lg" onClick={handleBuy} className="mt-4 w-full bg-primary text-primary-foreground hover:bg-indigo-700">Buy Now</Button>
+                <div className="mt-6">
+                  <span className="text-3xl font-bold tabular-nums text-gradient">${price}</span>
+                </div>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button size="lg" onClick={handleBuy} className="mt-5 w-full gradient-primary text-primary-foreground shadow-glow transition-shadow hover:shadow-lg text-base">
+                    <Sparkles className="mr-2 h-4 w-4" /> Buy Now
+                  </Button>
+                </motion.div>
                 <div className="mt-3 flex gap-2">
-                  <Button variant="outline" className="flex-1" onClick={handleWishlist}><Heart className="mr-1.5 h-4 w-4" />Wishlist</Button>
-                  <Button variant="outline" size="icon"><Share2 className="h-4 w-4" /></Button>
+                  <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button variant="outline" className="w-full hover:border-primary/30 hover:shadow-glow transition-all" onClick={handleWishlist}>
+                      <Heart className="mr-1.5 h-4 w-4" />Wishlist
+                    </Button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button variant="outline" size="icon" className="hover:border-primary/30"><Share2 className="h-4 w-4" /></Button>
+                  </motion.div>
                 </div>
                 <div className="mt-6 space-y-3 border-t border-border pt-6">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground"><ShieldCheck className="h-4 w-4 text-primary" />Secure checkout with SSL</div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground"><Download className="h-4 w-4 text-primary" />Instant download after purchase</div>
+                  {[
+                    { icon: ShieldCheck, text: "Secure checkout with SSL" },
+                    { icon: Download, text: "Instant download after purchase" },
+                    { icon: CheckCircle2, text: "Lifetime updates included" },
+                  ].map(({ icon: Icon, text }) => (
+                    <div key={text} className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <Icon className="h-4 w-4 text-primary" />{text}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="rounded-lg border border-border bg-card p-4">
+              <div className="rounded-xl border border-border bg-card p-5 shadow-ink">
                 <h3 className="mb-3 text-sm font-semibold">Product Info</h3>
-                <dl className="space-y-2 text-sm">
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Version</dt><dd className="tabular-nums font-medium">{version}</dd></div>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Updated</dt><dd className="font-medium">{lastUpdated}</dd></div>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Category</dt><dd className="font-medium">{category}</dd></div>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Vendor</dt><dd className="font-medium text-primary">{vendorName}</dd></div>
+                <dl className="space-y-2.5 text-sm">
+                  {[
+                    { label: "Version", value: version },
+                    { label: "Updated", value: lastUpdated },
+                    { label: "Category", value: category },
+                    { label: "Vendor", value: vendorName, isPrimary: true },
+                  ].map(({ label, value, isPrimary }) => (
+                    <div key={label} className="flex justify-between">
+                      <dt className="text-muted-foreground">{label}</dt>
+                      <dd className={`font-medium tabular-nums ${isPrimary ? "text-primary" : ""}`}>{value}</dd>
+                    </div>
+                  ))}
                 </dl>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

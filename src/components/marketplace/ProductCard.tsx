@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { Star, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -35,34 +35,70 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -6 }}
+      className="group"
     >
-      <Link to={`/product/${product.slug}`} className="group block">
-        <div className="overflow-hidden rounded-lg border border-border bg-card shadow-ink transition-shadow duration-200 hover:shadow-premium">
+      <Link to={`/product/${product.slug}`} className="block">
+        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-ink transition-all duration-500 group-hover:shadow-elevated group-hover:border-primary/20">
           <div className="relative aspect-[16/10] overflow-hidden">
-            <img src={thumbnail} alt={product.title} className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105" />
-            <div className="pointer-events-none absolute inset-0 rounded-t-lg ring-1 ring-inset ring-foreground/5" />
+            <motion.img
+              src={thumbnail}
+              alt={product.title}
+              className="h-full w-full object-cover"
+              whileHover={{ scale: 1.08 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            />
+            {/* Hover overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 transition-all duration-500 group-hover:bg-foreground/30">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileHover={{ opacity: 1, scale: 1 }}
+                className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              >
+                <div className="flex items-center gap-2 rounded-full bg-surface/90 px-4 py-2 text-sm font-medium text-foreground shadow-elevated backdrop-blur-sm">
+                  <Eye className="h-4 w-4" /> Preview
+                </div>
+              </motion.div>
+            </div>
+            <div className="pointer-events-none absolute inset-0 rounded-t-xl ring-1 ring-inset ring-foreground/5" />
             {product.featured && (
-              <span className="absolute left-3 top-3 rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">Featured</span>
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.08 + 0.3 }}
+                className="absolute left-3 top-3 rounded-full gradient-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-glow"
+              >
+                ✨ Featured
+              </motion.span>
             )}
           </div>
           <div className="p-4">
-            <div className="mb-1"><span className="text-xs font-medium text-muted-foreground">{category}</span></div>
-            <h3 className="mb-2 line-clamp-1 text-[15px] font-semibold text-card-foreground">{product.title}</h3>
-            <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">{product.description}</p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1">
-                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                <span className="text-sm font-medium tabular-nums">{rating || "—"}</span>
-                {reviewCount > 0 && <span className="text-xs text-muted-foreground">({reviewCount})</span>}
-              </div>
-              <span className="rounded-full bg-primary px-3 py-1 text-sm font-bold text-primary-foreground">${product.price}</span>
+            <div className="mb-1.5">
+              <span className="rounded-full bg-primary/8 px-2 py-0.5 text-[11px] font-medium tracking-wide uppercase text-primary">{category}</span>
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-              <span>{vendorName}</span>
+            <h3 className="mb-1.5 line-clamp-1 text-[15px] font-semibold text-card-foreground transition-colors group-hover:text-primary">{product.title}</h3>
+            <p className="mb-3 line-clamp-2 text-[13px] leading-relaxed text-muted-foreground">{product.description}</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map(s => (
+                    <Star key={s} className={`h-3 w-3 ${s <= (rating || 0) ? "fill-amber-400 text-amber-400" : "text-border"}`} />
+                  ))}
+                </div>
+                {reviewCount > 0 && <span className="text-[11px] text-muted-foreground">({reviewCount})</span>}
+              </div>
+              <motion.span
+                className="rounded-lg gradient-primary px-3 py-1 text-sm font-bold text-primary-foreground shadow-sm"
+                whileHover={{ scale: 1.05 }}
+              >
+                ${product.price}
+              </motion.span>
+            </div>
+            <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-[11px] text-muted-foreground">
+              <span className="font-medium">{vendorName}</span>
               <span className="tabular-nums">{Number(salesCount).toLocaleString()} sales</span>
             </div>
           </div>
