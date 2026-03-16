@@ -16,14 +16,14 @@ export async function sendVerificationEmail(to: string, verifyLink: string, name
   }
 
   await transporter.sendMail({
-    from: `"SourceStack" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    from: `"Hunny IT" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
     to,
-    subject: "Verify your email — SourceStack",
+    subject: "Verify your email — Hunny IT",
     html: `
       <div style="font-family: -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
         <div style="text-align: center; margin-bottom: 32px;">
           <div style="display: inline-block; width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 10px; line-height: 40px; color: white; font-weight: bold; font-size: 18px;">S</div>
-          <h2 style="margin: 16px 0 0; color: #1a1a2e;">SourceStack</h2>
+          <h2 style="margin: 16px 0 0; color: #1a1a2e;">Hunny IT</h2>
         </div>
         <h1 style="font-size: 22px; color: #1a1a2e; margin-bottom: 16px;">Verify your email</h1>
         <p style="color: #555; line-height: 1.6;">Hi ${name},</p>
@@ -43,14 +43,14 @@ export async function sendPasswordResetEmail(to: string, resetLink: string) {
   }
 
   await transporter.sendMail({
-    from: `"SourceStack" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    from: `"Hunny IT" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
     to,
-    subject: "Reset your password — SourceStack",
+    subject: "Reset your password — Hunny IT",
     html: `
       <div style="font-family: -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 20px;">
         <div style="text-align: center; margin-bottom: 32px;">
           <div style="display: inline-block; width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 10px; line-height: 40px; color: white; font-weight: bold; font-size: 18px;">S</div>
-          <h2 style="margin: 16px 0 0; color: #1a1a2e;">SourceStack</h2>
+          <h2 style="margin: 16px 0 0; color: #1a1a2e;">Hunny IT</h2>
         </div>
         <h1 style="font-size: 22px; color: #1a1a2e; margin-bottom: 16px;">Reset your password</h1>
         <p style="color: #555; line-height: 1.6;">We received a request to reset your password. Click the button below to choose a new one.</p>

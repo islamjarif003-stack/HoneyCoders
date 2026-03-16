@@ -27,13 +27,12 @@ const Navbar = () => {
       <div className="container flex h-16 items-center justify-between gap-4">
         <Link to="/" className="group flex items-center gap-2.5 font-display text-xl font-bold text-foreground">
           <motion.div
-            className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary shadow-glow"
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="text-sm font-bold text-primary-foreground">S</span>
+            <img src="/hunny-it-logo-1.jpeg" alt="Hunny IT" className="h-8 w-8 rounded-lg object-cover" />
           </motion.div>
-          <span className="hidden sm:inline">SourceStack</span>
+          <span className="hidden sm:inline">Hunny IT</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

@@ -23,12 +23,11 @@ const Checkout = () => (
       <div className="mb-6 text-center">
         <Link to="/" className="group inline-flex items-center gap-2 font-display text-lg font-bold">
           <motion.div
-            className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary shadow-glow"
             whileHover={{ scale: 1.1, rotate: 5 }}
           >
-            <span className="text-sm font-bold text-primary-foreground">S</span>
+            <img src="/hunny-it-logo-1.jpeg" alt="Hunny IT" className="h-9 w-9 rounded-lg object-cover" />
           </motion.div>
-          SourceStack
+          Hunny IT
         </Link>
         <h1 className="mt-4 font-display text-xl font-bold">Checkout</h1>
         <div className="mt-1 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">

@@ -43,18 +43,15 @@ const Footer = () => {
             transition={{ duration: 0.5 }}
           >
             <Link to="/" className="mb-5 flex items-center gap-2.5 font-display text-lg font-bold">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary shadow-glow">
-                <span className="text-xs font-bold text-primary-foreground">S</span>
-              </div>
-              SourceStack
+              <img src="/hunny-it-logo-1.jpeg" alt="Hunny IT" className="h-8 w-8 rounded-lg object-cover" />
+              Hunny IT
             </Link>
             <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
               The largest digital marketplace. Buy, sell, and succeed with premium code.
             </p>
             <div className="flex flex-col gap-2.5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary" /> San Francisco, CA</span>
-              <span className="flex items-center gap-2"><Phone className="h-3.5 w-3.5 text-primary" /> +1 (555) 123-4567</span>
-              <span className="flex items-center gap-2"><Mail className="h-3.5 w-3.5 text-primary" /> hello@sourcestack.dev</span>
+              <span className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary" /> Bangladesh</span>
+              <span className="flex items-center gap-2"><Mail className="h-3.5 w-3.5 text-primary" /> contact@hunnyit.com</span>
             </div>
           </motion.div>
 
@@ -127,7 +124,7 @@ const Footer = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
         >
-          <p className="text-xs text-muted-foreground">© 2026 SourceStack. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© 2026 Hunny IT. All rights reserved.</p>
           <div className="flex gap-4">
             <a href="#" className="text-xs text-muted-foreground transition-colors hover:text-foreground">Privacy Policy</a>
             <a href="#" className="text-xs text-muted-foreground transition-colors hover:text-foreground">Terms of Service</a>

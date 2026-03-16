@@ -80,12 +80,11 @@ const Auth = () => {
         <div className="mb-8 text-center">
           <Link to="/" className="group inline-flex items-center gap-2.5 font-display text-xl font-bold">
             <motion.div
-              className="flex h-9 w-9 items-center justify-center rounded-lg gradient-primary shadow-glow"
               whileHover={{ scale: 1.1, rotate: 5 }}
             >
-              <span className="text-sm font-bold text-primary-foreground">S</span>
+              <img src="/hunny-it-logo-1.jpeg" alt="Hunny IT" className="h-9 w-9 rounded-lg object-cover" />
             </motion.div>
-            SourceStack
+            Hunny IT
           </Link>
           <AnimatePresence mode="wait">
             <motion.div

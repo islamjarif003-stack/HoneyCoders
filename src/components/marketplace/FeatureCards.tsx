@@ -70,7 +70,7 @@ const FeatureCards = () => (
           More is coming!
         </h2>
         <p className="mt-3 text-sm text-muted-foreground">
-          SourceStack is constantly evolving with new features.
+          Hunny IT is constantly evolving with new features.
           <br />
           Stay ahead with a vendor account and start selling today.
         </p>

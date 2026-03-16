@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 const AdminSettings = () => {
   const [commission, setCommission] = useState("20");
-  const [siteName, setSiteName] = useState("SourceStack");
+  const [siteName, setSiteName] = useState("Hunny IT");
 
   const handleSave = () => {
     toast.success("Settings saved");
