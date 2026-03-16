@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, Users, UserCog, FolderTree, DollarSign, ShieldCheck, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Users, UserCog, FolderTree, DollarSign, ShieldCheck, Settings, LogOut, FileText } from "lucide-react";
 import Navbar from "@/components/marketplace/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminOverview from "@/components/admin/AdminOverview";
@@ -10,6 +10,7 @@ import AdminCategories from "@/components/admin/AdminCategories";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminWithdrawals from "@/components/admin/AdminWithdrawals";
 import AdminSettings from "@/components/admin/AdminSettings";
+import AdminPages from "@/components/admin/AdminPages";
 
 const adminNav = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
@@ -19,6 +20,7 @@ const adminNav = [
   { label: "Categories", icon: FolderTree, path: "/admin/categories" },
   { label: "Orders", icon: DollarSign, path: "/admin/orders" },
   { label: "Withdrawals", icon: DollarSign, path: "/admin/withdrawals" },
+  { label: "Pages", icon: FileText, path: "/admin/pages" },
   { label: "Settings", icon: Settings, path: "/admin/settings" },
 ];
 
