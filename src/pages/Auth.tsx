@@ -167,6 +167,7 @@ const Auth = () => {
                   </Link>
                 </div>
               )}
+            <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
               <Button type="submit" disabled={loading} className="w-full gradient-primary text-primary-foreground shadow-glow transition-shadow hover:shadow-lg">
                 {loading ? (
                   <motion.div className="h-4 w-4 rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
