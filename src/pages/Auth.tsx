@@ -42,10 +42,7 @@ const Auth = () => {
         navigate("/");
       } else {
         await signUp(email, password, displayName);
-        toast.success("Account created! Please check your email to verify your account.");
-        setIsLogin(true);
-        setEmail("");
-        setPassword("");
+        navigate(`/check-email?email=${encodeURIComponent(email)}`);
       }
     } catch (err: any) {
       if (err.message?.includes("verify your email") || err.message?.includes("EMAIL_NOT_VERIFIED")) {

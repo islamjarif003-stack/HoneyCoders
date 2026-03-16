@@ -13,6 +13,7 @@ import Checkout from "./pages/Checkout.tsx";
 import UserLibrary from "./pages/UserLibrary.tsx";
 import Auth from "./pages/Auth.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
+import CheckEmail from "./pages/CheckEmail.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import VerifyEmail from "./pages/VerifyEmail.tsx";
 import SitePage from "./pages/SitePage.tsx";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/check-email" element={<CheckEmail />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/page/:slug" element={<SitePage />} />
             <Route path="*" element={<NotFound />} />
