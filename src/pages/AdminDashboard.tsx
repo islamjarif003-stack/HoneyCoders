@@ -49,6 +49,7 @@ const AdminDashboard = () => {
       case "/admin/categories": return <AdminCategories />;
       case "/admin/orders": return <AdminOrders />;
       case "/admin/withdrawals": return <AdminWithdrawals />;
+      case "/admin/pages": return <AdminPages />;
       case "/admin/settings": return <AdminSettings />;
       default: return <AdminOverview />;
     }
