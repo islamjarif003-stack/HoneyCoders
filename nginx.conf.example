@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name hunnycoders.com www.hunnycoders.com;
+    server_name hunnycoders.com www.hunnycoders.com 123.456.78.90; # Replace the IP with your VPS IP if you use IP access
 
     # Frontend configuration (assuming built React app)
     location / {
