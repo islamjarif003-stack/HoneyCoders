@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -13,8 +14,22 @@ const Auth = () => {
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resending, setResending] = useState(false);
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
+
+  const handleResend = async () => {
+    setResending(true);
+    try {
+      await api("/auth/resend-verification", { method: "POST", body: { email: resendEmail } });
+      toast.success("Verification email sent! Check your inbox.");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to resend");
+    }
+    setResending(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,10 +42,16 @@ const Auth = () => {
         navigate("/");
       } else {
         await signUp(email, password, displayName);
-        toast.success("Account created! You can now sign in.");
+        toast.success("Account created! Please check your email to verify your account.");
         setIsLogin(true);
+        setEmail("");
+        setPassword("");
       }
     } catch (err: any) {
+      if (err.message?.includes("verify your email") || err.message?.includes("EMAIL_NOT_VERIFIED")) {
+        setShowResend(true);
+        setResendEmail(email);
+      }
       toast.error(err.message || "Something went wrong");
     }
     setLoading(false);
@@ -154,9 +175,26 @@ const Auth = () => {
           </form>
         </motion.div>
 
+        {showResend && isLogin && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-center"
+          >
+            <p className="text-sm text-foreground">Email not verified yet.</p>
+            <button
+              onClick={handleResend}
+              disabled={resending}
+              className="mt-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+            >
+              {resending ? "Sending..." : "Resend verification email"}
+            </button>
+          </motion.div>
+        )}
+
         <p className="mt-6 text-center text-sm text-muted-foreground">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-          <button onClick={() => setIsLogin(!isLogin)} className="font-medium text-primary transition-colors hover:text-primary/80">
+          <button onClick={() => { setIsLogin(!isLogin); setShowResend(false); }} className="font-medium text-primary transition-colors hover:text-primary/80">
             {isLogin ? "Sign up" : "Sign in"}
           </button>
         </p>
