@@ -1,10 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, Users, FolderTree, DollarSign, ShieldCheck, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Users, UserCog, FolderTree, DollarSign, ShieldCheck, Settings, LogOut } from "lucide-react";
 import Navbar from "@/components/marketplace/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminOverview from "@/components/admin/AdminOverview";
 import AdminProducts from "@/components/admin/AdminProducts";
 import AdminVendors from "@/components/admin/AdminVendors";
+import AdminUsers from "@/components/admin/AdminUsers";
 import AdminCategories from "@/components/admin/AdminCategories";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminWithdrawals from "@/components/admin/AdminWithdrawals";
@@ -13,6 +14,7 @@ import AdminSettings from "@/components/admin/AdminSettings";
 const adminNav = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
   { label: "Products", icon: Package, path: "/admin/products" },
+  { label: "Users", icon: UserCog, path: "/admin/users" },
   { label: "Vendors", icon: Users, path: "/admin/vendors" },
   { label: "Categories", icon: FolderTree, path: "/admin/categories" },
   { label: "Orders", icon: DollarSign, path: "/admin/orders" },
@@ -40,6 +42,7 @@ const AdminDashboard = () => {
   const renderContent = () => {
     switch (pathname) {
       case "/admin/products": return <AdminProducts />;
+      case "/admin/users": return <AdminUsers />;
       case "/admin/vendors": return <AdminVendors />;
       case "/admin/categories": return <AdminCategories />;
       case "/admin/orders": return <AdminOrders />;
