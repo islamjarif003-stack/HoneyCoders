@@ -175,9 +175,26 @@ const Auth = () => {
           </form>
         </motion.div>
 
+        {showResend && isLogin && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-center"
+          >
+            <p className="text-sm text-foreground">Email not verified yet.</p>
+            <button
+              onClick={handleResend}
+              disabled={resending}
+              className="mt-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+            >
+              {resending ? "Sending..." : "Resend verification email"}
+            </button>
+          </motion.div>
+        )}
+
         <p className="mt-6 text-center text-sm text-muted-foreground">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-          <button onClick={() => setIsLogin(!isLogin)} className="font-medium text-primary transition-colors hover:text-primary/80">
+          <button onClick={() => { setIsLogin(!isLogin); setShowResend(false); }} className="font-medium text-primary transition-colors hover:text-primary/80">
             {isLogin ? "Sign up" : "Sign in"}
           </button>
         </p>
