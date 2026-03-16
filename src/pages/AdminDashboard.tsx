@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, Users, UserCog, FolderTree, DollarSign, ShieldCheck, Settings, LogOut, FileText } from "lucide-react";
+import { LayoutDashboard, Package, Users, UserCog, FolderTree, DollarSign, ShieldCheck, Settings, LogOut, FileText, Menu, X } from "lucide-react";
 import Navbar from "@/components/marketplace/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminOverview from "@/components/admin/AdminOverview";
@@ -28,6 +29,7 @@ const AdminDashboard = () => {
   const { pathname } = useLocation();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   if (!user) {
     return (
@@ -55,27 +57,58 @@ const AdminDashboard = () => {
     }
   };
 
+  const NavItems = ({ onItemClick }: { onItemClick?: () => void }) => (
+    <nav className="space-y-1">
+      {adminNav.map((item) => {
+        const active = pathname === item.path;
+        return (
+          <Link key={item.path} to={item.path} onClick={onItemClick}
+            className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${active ? "border-l-2 border-primary bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+          >
+            <item.icon className="h-4 w-4" />{item.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+
+      {/* Mobile top bar */}
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background px-4 py-3 lg:hidden">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="h-4 w-4 text-primary" />
+          <p className="text-sm font-semibold text-foreground">Admin Panel</p>
+        </div>
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-muted-foreground hover:text-foreground">
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-20 bg-background/80 backdrop-blur-sm lg:hidden" onClick={() => setMobileMenuOpen(false)}>
+          <div className="absolute left-0 top-[calc(64px+49px)] w-[280px] h-[calc(100vh-113px)] border-r border-border bg-card p-4 shadow-lg" onClick={(e) => e.stopPropagation()}>
+            <NavItems onItemClick={() => setMobileMenuOpen(false)} />
+            <div className="mt-6 border-t border-border pt-4">
+              <button onClick={() => { signOut(); navigate("/"); }} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+                <LogOut className="h-4 w-4" /> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex">
+        {/* Desktop sidebar */}
         <aside className="sticky top-16 hidden h-[calc(100vh-64px)] w-[280px] shrink-0 border-r border-border bg-surface p-4 lg:block">
           <div className="mb-6 flex items-center gap-2 px-3">
             <ShieldCheck className="h-4 w-4 text-primary" />
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Admin Panel</p>
           </div>
-          <nav className="space-y-1">
-            {adminNav.map((item) => {
-              const active = pathname === item.path;
-              return (
-                <Link key={item.path} to={item.path}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${active ? "border-l-2 border-primary bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
-                >
-                  <item.icon className="h-4 w-4" />{item.label}
-                </Link>
-              );
-            })}
-          </nav>
+          <NavItems />
           <div className="absolute bottom-4 left-4 right-4">
             <button onClick={() => { signOut(); navigate("/"); }} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
               <LogOut className="h-4 w-4" /> Sign Out
@@ -83,7 +116,7 @@ const AdminDashboard = () => {
           </div>
         </aside>
 
-        <main className="flex-1 p-6 lg:p-8">
+        <main className="flex-1 p-4 lg:p-8">
           {renderContent()}
         </main>
       </div>
