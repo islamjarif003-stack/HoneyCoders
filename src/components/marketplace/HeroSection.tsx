@@ -1,6 +1,6 @@
 import { Search, Sparkles } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useState, useRef } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
@@ -11,13 +11,43 @@ const floatingTags = [
   { label: "Next.js", x: "5%", y: "70%", delay: 1.5 },
 ];
 
+const rotatingWords = ["modern builders.", "startup founders.", "creative devs.", "product teams."];
+
 const HeroSection = () => {
   const [query, setQuery] = useState("");
+  const [wordIndex, setWordIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [displayText, setDisplayText] = useState("");
   const navigate = useNavigate();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  useEffect(() => {
+    const currentWord = rotatingWords[wordIndex];
+    const speed = isDeleting ? 40 : 80;
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setDisplayText(currentWord.slice(0, charIndex + 1));
+        setCharIndex((prev) => prev + 1);
+        if (charIndex + 1 === currentWord.length) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        setDisplayText(currentWord.slice(0, charIndex - 1));
+        setCharIndex((prev) => prev - 1);
+        if (charIndex - 1 === 0) {
+          setIsDeleting(false);
+          setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+        }
+      }
+    }, speed);
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, isDeleting, wordIndex]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +59,7 @@ const HeroSection = () => {
       {/* Parallax Background */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
         <img src={heroBg} alt="" className="h-[120%] w-full object-cover" />
-        <div className="absolute inset-0 gradient-hero opacity-85" />
+        <div className="absolute inset-0 gradient-hero opacity-90" />
       </motion.div>
 
       {/* Animated dot pattern overlay */}
@@ -87,7 +117,15 @@ const HeroSection = () => {
             transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             The engine room for{" "}
-            <span className="text-gradient">modern builders.</span>
+            <span className="relative inline-block">
+              <span className="text-gradient">{displayText}</span>
+              <motion.span
+                className="ml-0.5 inline-block h-[0.9em] w-[3px] translate-y-[0.1em] rounded-full bg-primary align-middle"
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, repeatType: "reverse" }}
+              />
+              <span className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-gradient-to-r from-primary via-primary-glow to-primary opacity-60" />
+            </span>
           </motion.h1>
 
           <motion.p
