@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/AdminDashboard.tsx";
 import Checkout from "./pages/Checkout.tsx";
 import UserLibrary from "./pages/UserLibrary.tsx";
 import Auth from "./pages/Auth.tsx";
+import VerifyEmail from "./pages/VerifyEmail.tsx";
 import SitePage from "./pages/SitePage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
