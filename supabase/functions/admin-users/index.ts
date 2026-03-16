@@ -12,7 +12,7 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY") || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsZGNta3NtaWNiYnVwdmpxbG5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1OTc4NTUsImV4cCI6MjA4OTE3Mzg1NX0.dVx8xKJr3cQ0YY9o0Rxw0s1A_UDWS4OBq0wEDi5q1SI";
 
     if (!supabaseUrl || !serviceRoleKey || !anonKey) {
       console.error("Missing env vars:", { hasUrl: !!supabaseUrl, hasKey: !!serviceRoleKey, hasAnon: !!anonKey });
