@@ -3,24 +3,40 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");
 
-    // Verify caller is admin
-    const authHeader = req.headers.get("Authorization")!;
-    const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!, {
+    if (!supabaseUrl || !serviceRoleKey || !anonKey) {
+      console.error("Missing env vars:", { hasUrl: !!supabaseUrl, hasKey: !!serviceRoleKey, hasAnon: !!anonKey });
+      return new Response(JSON.stringify({ error: "Server configuration error" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Verify caller is authenticated
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
+
     const { data: { user } } = await userClient.auth.getUser();
     if (!user) throw new Error("Not authenticated");
 
+    // Verify admin role
     const { data: isAdmin } = await userClient.rpc("has_role", { _user_id: user.id, _role: "admin" });
     if (!isAdmin) throw new Error("Not authorized");
 
@@ -51,7 +67,6 @@ serve(async (req) => {
         const { error } = await adminClient.from("profiles").update({ account_status: status }).eq("user_id", userId);
         if (error) throw error;
 
-        // If suspended, also ban in auth
         if (status === "suspended") {
           await adminClient.auth.admin.updateUserById(userId, { ban_duration: "876000h" });
         } else {
@@ -63,7 +78,6 @@ serve(async (req) => {
       case "reset_password": {
         const { data: userData } = await adminClient.auth.admin.getUserById(userId);
         if (!userData?.user?.email) throw new Error("User email not found");
-        // Generate a password reset link
         const { data, error } = await adminClient.auth.admin.generateLink({
           type: "recovery",
           email: userData.user.email,
