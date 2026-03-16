@@ -14,6 +14,7 @@ import AdminSettings from "@/components/admin/AdminSettings";
 const adminNav = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
   { label: "Products", icon: Package, path: "/admin/products" },
+  { label: "Users", icon: UserCog, path: "/admin/users" },
   { label: "Vendors", icon: Users, path: "/admin/vendors" },
   { label: "Categories", icon: FolderTree, path: "/admin/categories" },
   { label: "Orders", icon: DollarSign, path: "/admin/orders" },
