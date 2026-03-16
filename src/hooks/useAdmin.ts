@@ -69,7 +69,7 @@ export const useAllUsers = () => {
       const { data: profiles, error } = await supabase
         .from("profiles")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false }) as any;
       if (error) throw error;
 
       const { data: roles } = await supabase

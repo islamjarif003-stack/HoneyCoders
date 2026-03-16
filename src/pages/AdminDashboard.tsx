@@ -1,10 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, Users, FolderTree, DollarSign, ShieldCheck, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Users, UserCog, FolderTree, DollarSign, ShieldCheck, Settings, LogOut } from "lucide-react";
 import Navbar from "@/components/marketplace/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
 import AdminOverview from "@/components/admin/AdminOverview";
 import AdminProducts from "@/components/admin/AdminProducts";
 import AdminVendors from "@/components/admin/AdminVendors";
+import AdminUsers from "@/components/admin/AdminUsers";
 import AdminCategories from "@/components/admin/AdminCategories";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminWithdrawals from "@/components/admin/AdminWithdrawals";
