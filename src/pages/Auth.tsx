@@ -159,7 +159,14 @@ const Auth = () => {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-            </div>
+              </div>
+              {isLogin && (
+                <div className="text-right">
+                  <Link to="/forgot-password" className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary">
+                    Forgot password?
+                  </Link>
+                </div>
+              )}
             <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
               <Button type="submit" disabled={loading} className="w-full gradient-primary text-primary-foreground shadow-glow transition-shadow hover:shadow-lg">
                 {loading ? (

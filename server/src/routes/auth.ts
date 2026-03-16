@@ -155,6 +155,69 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Forgot password — send reset link
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email required" });
+
+    const { rows } = await query("SELECT id FROM users WHERE email = $1", [email]);
+    // Always return success to avoid email enumeration
+    if (!rows.length) return res.json({ message: "If that email exists, a reset link has been sent." });
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const tokenExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await query(
+      "UPDATE users SET reset_token = $1, reset_token_expires = $2 WHERE id = $3",
+      [resetToken, tokenExpires, rows[0].id]
+    );
+
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetLink = `${frontendUrl}/reset-password?token=${resetToken}`;
+
+    try {
+      const { sendPasswordResetEmail } = await import("../email");
+      await sendPasswordResetEmail(email, resetLink);
+    } catch {
+      console.log("Email service not configured. Reset link:", resetLink);
+    }
+
+    res.json({ message: "If that email exists, a reset link has been sent." });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Reset password — validate token and set new password
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    if (!token || !password) return res.status(400).json({ message: "Token and new password required" });
+    if (password.length < 6) return res.status(400).json({ message: "Password must be at least 6 characters" });
+
+    const { rows } = await query(
+      "SELECT id, reset_token_expires FROM users WHERE reset_token = $1",
+      [token]
+    );
+    if (!rows.length) return res.status(400).json({ message: "Invalid or expired reset link" });
+
+    if (new Date() > new Date(rows[0].reset_token_expires)) {
+      return res.status(400).json({ message: "Reset link has expired. Please request a new one." });
+    }
+
+    const hash = await bcrypt.hash(password, 12);
+    await query(
+      "UPDATE users SET password_hash = $1, reset_token = NULL, reset_token_expires = NULL WHERE id = $2",
+      [hash, rows[0].id]
+    );
+
+    res.json({ message: "Password reset successfully! You can now sign in." });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Get current user
 router.get("/me", authenticate, async (req: AuthRequest, res) => {
   try {
