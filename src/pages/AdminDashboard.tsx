@@ -42,6 +42,7 @@ const AdminDashboard = () => {
   const renderContent = () => {
     switch (pathname) {
       case "/admin/products": return <AdminProducts />;
+      case "/admin/users": return <AdminUsers />;
       case "/admin/vendors": return <AdminVendors />;
       case "/admin/categories": return <AdminCategories />;
       case "/admin/orders": return <AdminOrders />;
