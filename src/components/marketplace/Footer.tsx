@@ -129,11 +129,11 @@ const Footer = () => {
             { name: "Mastercard", color: "bg-[#111] text-white", label: <div className="flex items-center justify-center"><div className="h-4 w-4 rounded-full bg-[#EB001B] opacity-90"/><div className="h-4 w-4 rounded-full bg-[#F79E1B] opacity-90 -ml-2"/></div> },
             { name: "Amex", color: "bg-[#2E77BC] text-white", label: <span className="font-bold tracking-wider text-[10px]">AMEX</span> },
             { name: "PayPal", color: "bg-[#003087] text-white", label: <span className="font-bold italic text-[11px]">PayPal</span> },
-            { name: "bKash", color: "bg-[#E2136E] text-white", label: <span className="font-bold text-[12px] tracking-tight">bKash</span> },
-            { name: "Nagad", color: "bg-gradient-to-r from-[#F04F23] to-[#ED1C24] text-white", label: <span className="font-bold text-[12px] tracking-tight">Nagad</span> },
-            { name: "Rocket", color: "bg-[#8B257E] text-white", label: <span className="font-bold text-[12px] tracking-tight">Rocket</span> },
-            { name: "Upay", color: "bg-[#0060A9] text-white", label: <span className="font-bold text-[12px] flex items-center gap-0.5 tracking-tight">upay<div className="w-1.5 h-1.5 rounded-full bg-[#FFC500]"/></span> },
-            { name: "Nexus", color: "bg-[#008A4B] text-white", label: <span className="font-bold text-[11px] tracking-tight">NEXUS</span> },
+            { name: "Stripe", color: "bg-[#635BFF] text-white", label: <span className="font-bold text-[12px] tracking-tight">Stripe</span> },
+            { name: "Discover", color: "bg-[#FF6000] text-white", label: <span className="font-bold text-[11px] tracking-tight">DISCOVER</span> },
+            { name: "Apple Pay", color: "bg-black text-white", label: <span className="font-semibold text-[11px] tracking-tight">Apple Pay</span> },
+            { name: "Google Pay", color: "bg-white text-slate-700", label: <span className="font-semibold text-[11px] tracking-tight">G Pay</span> },
+            { name: "JCB", color: "bg-[#0039A6] text-white", label: <span className="font-bold text-[11px] tracking-tight">JCB</span> },
           ].map((pm) => (
             <div 
               key={pm.name} 
