@@ -125,22 +125,55 @@ const Footer = () => {
           transition={{ delay: 0.2 }}
         >
           {[
-            { name: "Visa", color: "bg-[#1A1F71] text-white", label: <span className="font-bold italic tracking-widest text-[12px]">VISA</span> },
-            { name: "Mastercard", color: "bg-[#111] text-white", label: <div className="flex items-center justify-center"><div className="h-4 w-4 rounded-full bg-[#EB001B] opacity-90"/><div className="h-4 w-4 rounded-full bg-[#F79E1B] opacity-90 -ml-2"/></div> },
-            { name: "Amex", color: "bg-[#2E77BC] text-white", label: <span className="font-bold tracking-wider text-[10px]">AMEX</span> },
-            { name: "PayPal", color: "bg-[#003087] text-white", label: <span className="font-bold italic text-[11px]">PayPal</span> },
-            { name: "Stripe", color: "bg-[#635BFF] text-white", label: <span className="font-bold text-[12px] tracking-tight">Stripe</span> },
-            { name: "Discover", color: "bg-[#FF6000] text-white", label: <span className="font-bold text-[11px] tracking-tight">DISCOVER</span> },
-            { name: "Apple Pay", color: "bg-black text-white", label: <span className="font-semibold text-[11px] tracking-tight">Apple Pay</span> },
-            { name: "Google Pay", color: "bg-white text-slate-700", label: <span className="font-semibold text-[11px] tracking-tight">G Pay</span> },
-            { name: "JCB", color: "bg-[#0039A6] text-white", label: <span className="font-bold text-[11px] tracking-tight">JCB</span> },
+            { 
+              name: "Visa", 
+              element: (
+                <div className="flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center rounded-md bg-[#1A1F71] px-2.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#1A1F71]/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 66" className="h-auto w-full fill-white drop-shadow-sm">
+                    <path d="M81.53 1.58L54.83 64H28.11l16.3-62.42zm92.64.04c-4.62-2-12.97-3.87-23.49-3.87-15.07 0-25.7 7.91-25.75 19.26-.1 10 5.78 14.25 12.3 17.46 6.71 3.3 10.31 5.43 10.32 8.43 0 2.9-3.54 4.2-6.81 4.2-6.97 0-12.25-3.08-16.81-5.34L123.41 64C128.76 66.63 137.53 66.86 145.65 66.86 165.15 60.98 151.24 49.19 151.23 38.14 151.22 28.52 142.23 24.06 135.65 20.83 129.72 17.79 126.01 15.92 125.99 11.93 125.97 8.03 130.47 5.1 136.86 5.1 142.79 5.1 144.84 5.56 150.31 7.27zM113.88 23.2 96.07 64H77.12l-1.39-7.38h-22.1l-3.3 7.38H28.14l31.14-62.42h22.82l31.78 62.42zM61.9 44.2l10.3-27.67 5.92 27.67H61.9z"/>
+                  </svg>
+                </div>
+              )
+            },
+            { 
+              name: "Mastercard", 
+              element: (
+                <div className="flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center rounded-md bg-[#1C1C1E] px-2.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" className="h-[26px]">
+                    <circle cx="150" cy="150" r="150" fill="#eb001b"/>
+                    <circle cx="350" cy="150" r="150" fill="#f79e1a"/>
+                    <path fill="#ff5f00" d="M250 279c30.5-35.4 49-103.6 49-129s-18.5-93.6-49-129c-30.5 35.4-49 103.6-49 129s18.5 93.6 49 129z"/>
+                  </svg>
+                </div>
+              )
+            },
+            { 
+              name: "Amex", 
+              element: (
+                <div className="flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center rounded-md bg-transparent px-1.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#2E77BC]/30">
+                  <div className="flex h-full w-full items-center justify-center rounded-[3px] bg-[#2E77BC]">
+                    <span className="font-sans text-[12px] font-black tracking-wider text-white">AMEX</span>
+                  </div>
+                </div>
+              )
+            },
+            ...[
+              { name: "Alrajhi Capital", src: "/gateways/logo-1.png" },
+              { name: "STC Bank", src: "/gateways/logo-2.png" },
+              { name: "SNB", src: "/gateways/logo-3.png" },
+              { name: "Bank Muscat", src: "/gateways/logo-4.png" },
+              { name: "Maybank", src: "/gateways/logo-5.png" },
+            ].map(pm => ({
+              name: pm.name,
+              element: (
+                <div className="group flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-md bg-white p-1.5 shadow-sm ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-primary/20">
+                  <img src={pm.src} alt={pm.name} className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110 drop-shadow-sm" />
+                </div>
+              )
+            }))
           ].map((pm) => (
-            <div 
-              key={pm.name} 
-              className={`flex h-9 w-[70px] shrink-0 items-center justify-center rounded border border-border/50 shadow-sm ${pm.color} hover:opacity-90 transition-opacity`}
-              title={pm.name}
-            >
-              {pm.label}
+            <div key={pm.name} title={pm.name}>
+              {pm.element}
             </div>
           ))}
         </motion.div>
