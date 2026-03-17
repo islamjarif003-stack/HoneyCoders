@@ -18,6 +18,7 @@ import ResetPassword from "./pages/ResetPassword.tsx";
 import VerifyEmail from "./pages/VerifyEmail.tsx";
 import SitePage from "./pages/SitePage.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
