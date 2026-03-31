@@ -244,4 +244,50 @@ router.put("/pages/:id", async (req, res) => {
   }
 });
 
+// Payment Settings
+router.get("/payment-settings", async (_req, res) => {
+  try {
+    const { rows } = await query(
+      "SELECT setting_key, setting_value FROM payment_settings WHERE setting_key LIKE 'eps_%'"
+    );
+    const settings: Record<string, string> = {};
+    rows.forEach((r: any) => {
+      settings[r.setting_key] = r.setting_value;
+    });
+    res.json(settings);
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.put("/payment-settings", async (req, res) => {
+  try {
+    const { eps_username, eps_password, eps_merchant_id, eps_store_id, eps_hash_key } = req.body;
+
+    const entries = [
+      { key: "eps_username", value: eps_username },
+      { key: "eps_password", value: eps_password },
+      { key: "eps_merchant_id", value: eps_merchant_id },
+      { key: "eps_store_id", value: eps_store_id },
+      { key: "eps_hash_key", value: eps_hash_key },
+    ];
+
+    for (const entry of entries) {
+      if (entry.value !== undefined && entry.value !== null) {
+        await query(
+          `INSERT INTO payment_settings (setting_key, setting_value)
+           VALUES ($1, $2)
+           ON CONFLICT (setting_key)
+           DO UPDATE SET setting_value = EXCLUDED.setting_value`,
+          [entry.key, entry.value]
+        );
+      }
+    }
+
+    res.json({ success: true });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;

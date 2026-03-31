@@ -17,6 +17,7 @@ import CheckEmail from "./pages/CheckEmail.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import VerifyEmail from "./pages/VerifyEmail.tsx";
 import SitePage from "./pages/SitePage.tsx";
+import PaymentResult from "./pages/PaymentResult.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/admin/*" element={<AdminDashboard />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/:productId" element={<Checkout />} />
+            <Route path="/payment/status" element={<PaymentResult />} />
             <Route path="/library" element={<UserLibrary />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/verify-email" element={<VerifyEmail />} />

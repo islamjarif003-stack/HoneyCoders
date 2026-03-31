@@ -92,6 +92,18 @@ CREATE TABLE orders (
   amount DECIMAL(10,2) NOT NULL,
   status order_status DEFAULT 'pending',
   payment_intent_id VARCHAR(255),
+  merchant_transaction_id VARCHAR(255),
+  eps_transaction_id VARCHAR(255),
+  payment_method VARCHAR(100),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Payment Settings (EPS Gateway credentials stored by admin)
+CREATE TABLE payment_settings (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  setting_key VARCHAR(100) UNIQUE NOT NULL,
+  setting_value TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

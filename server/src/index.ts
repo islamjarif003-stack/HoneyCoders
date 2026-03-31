@@ -14,6 +14,7 @@ import orderRoutes from "./routes/orders";
 import pageRoutes from "./routes/pages";
 import wishlistRoutes from "./routes/wishlists";
 import profileRoutes from "./routes/profile";
+import epsPaymentRoutes from "./routes/payment.eps";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -39,6 +40,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/pages", pageRoutes);
 app.use("/api/wishlists", wishlistRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/payment/eps", epsPaymentRoutes);
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -47,18 +49,18 @@ app.get("/api/health", (_req, res) => {
 app.listen(PORT, async () => {
   console.log(`🚀 SourceStack API running on http://localhost:${PORT}`);
   
-  // Auto-initialize DB schema
-  try {
-    import('./db').then(async ({ pool }) => {
-      try {
-        const schema = fs.readFileSync(path.join(process.cwd(), "schema.sql"), "utf8");
-        await pool.query(schema);
-        console.log("✅ Database schema synchronized.");
-      } catch (err) {
-        console.error("❌ Failed to synchronize database schema:", err);
-      }
-    });
-  } catch (err) {
-    console.warn("Could not import DB for auto-initialization.");
-  }
+  // Auto-initialize DB schema (Commented out to prevent errors on restart)
+  // try {
+  //   import('./db').then(async ({ pool }) => {
+  //     try {
+  //       const schema = fs.readFileSync(path.join(process.cwd(), "schema.sql"), "utf8");
+  //       await pool.query(schema);
+  //       console.log("✅ Database schema synchronized.");
+  //     } catch (err) {
+  //       console.error("❌ Failed to synchronize database schema:", err);
+  //     }
+  //   });
+  // } catch (err) {
+  //   console.warn("Could not import DB for auto-initialization.");
+  // }
 });

@@ -21,13 +21,14 @@ interface AuthContextType {
   signUp: (email: string, password: string, displayName: string) => Promise<void>;
   isVendor: boolean;
   isAdmin: boolean;
+  token: string | null;
   session: { access_token: string } | null;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null, loading: true, profile: null, roles: [],
   signOut: async () => {}, signIn: async () => {}, signUp: async () => {},
-  isVendor: false, isAdmin: false, session: null,
+  isVendor: false, isAdmin: false, token: null, session: null,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -96,6 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user, loading, profile, roles, signOut, signIn, signUp,
         isVendor: roles.includes("vendor"),
         isAdmin: roles.includes("admin"),
+        token: token || null,
         session: token ? { access_token: token } : null,
       }}
     >

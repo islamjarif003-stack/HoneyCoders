@@ -43,9 +43,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get single product by slug (public)
-router.get("/:slug", async (req, res) => {
+// Get single product by slug or id (public)
+router.get("/:slugOrId", async (req, res) => {
   try {
+    const param = req.params.slugOrId;
+    // Check if it looks like a UUID
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(param);
+    
     const { rows } = await query(
       `SELECT p.*,
         json_build_object('id', c.id, 'name', c.name, 'slug', c.slug, 'icon', c.icon, 'sort_order', c.sort_order) as categories,
@@ -55,8 +59,8 @@ router.get("/:slug", async (req, res) => {
         ) as product_screenshots
       FROM products p
       LEFT JOIN categories c ON c.id = p.category_id
-      WHERE p.slug = $1`,
-      [req.params.slug]
+      WHERE ${isUuid ? "p.id = $1" : "p.slug = $1"}`,
+      [param]
     );
     if (!rows.length) return res.status(404).json({ message: "Product not found" });
     res.json(rows[0]);
