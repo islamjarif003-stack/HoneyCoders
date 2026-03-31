@@ -2,8 +2,12 @@ import { useVendorProducts } from "@/hooks/useMarketplace";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
-import { Eye, Edit, Plus } from "lucide-react";
+import { Eye, Edit, Plus, FileJson } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useState, useRef } from "react";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const statusColor: Record<string, string> = {
   approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -14,14 +18,49 @@ const statusColor: Record<string, string> = {
 
 const VendorProducts = () => {
   const { data: products, isLoading } = useVendorProducts();
+  const queryClient = useQueryClient();
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleBulkUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      try {
+        const json = JSON.parse(ev.target?.result as string);
+        await api("/vendor/products/bulk", {
+          method: "POST",
+          body: json
+        });
+        toast.success("Bulk upload successful!");
+        queryClient.invalidateQueries({ queryKey: ["vendor-products"] });
+      } catch (err: any) {
+        toast.error(err.message || "Failed to upload JSON");
+      } finally {
+        setIsUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
+    };
+    reader.readAsText(file);
+  };
 
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold">My Products</h1>
-        <Link to="/vendor/upload">
-          <Button size="sm"><Plus className="mr-2 h-4 w-4" />Add Product</Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <input type="file" accept=".json" className="hidden" ref={fileInputRef} onChange={handleBulkUpload} />
+          <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
+            <FileJson className="mr-2 h-4 w-4" />
+            {isUploading ? "Uploading..." : "Bulk Upload JSON"}
+          </Button>
+          <Link to="/vendor/upload">
+            <Button size="sm"><Plus className="mr-2 h-4 w-4" />Add Product</Button>
+          </Link>
+        </div>
       </div>
       <div className="rounded-lg border border-border bg-card shadow-ink">
         <Table>

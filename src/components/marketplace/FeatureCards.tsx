@@ -66,13 +66,13 @@ const FeatureCards = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <h2 className="font-display text-2xl font-bold md:text-3xl">
-          More is coming!
+        <h2 className="font-display text-3xl font-extrabold text-[#1F403A] md:text-4xl" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          Everything you need to succeed
         </h2>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Hunny IT is constantly evolving with new features.
+        <p className="mt-4 text-[16px] font-medium text-[#6A7B75]">
+          Powerful, built-in tools for both buyers and vendors.
           <br />
-          Stay ahead with a vendor account and start selling today.
+          Start selling your digital products today effortlessly.
         </p>
       </motion.div>
 
@@ -87,18 +87,17 @@ const FeatureCards = () => (
           <motion.div key={feat.title} variants={item}>
             <Link
               to={feat.link}
-              className="group relative flex items-start gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 transition-all duration-300 hover:border-primary/30 hover:shadow-glow"
+              className="card group relative flex items-start gap-4 overflow-hidden p-5 transition-all duration-300 hover:border-[#1F403A]/20 hover:shadow-elevated hover:-translate-y-1"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${feat.color} opacity-0 transition-opacity group-hover:opacity-100`} />
-              <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-all group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-glow">
+              <div className={`absolute inset-0 bg-gradient-to-br ${feat.color} opacity-0 transition-opacity duration-300 group-hover:opacity-[0.03]`} />
+              <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/60 text-[#1F403A] border border-black/5 shadow-sm transition-all group-hover:bg-[#1F403A] group-hover:text-white group-hover:shadow-teal-glow">
                 <feat.icon className="h-5 w-5" />
               </div>
-              <div className="relative flex-1">
+              <div className="relative flex-1 mt-0.5">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">{feat.title}</h3>
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">Soon</span>
+                  <h3 className="text-[17px] font-extrabold text-[#1F403A] group-hover:text-[#2D7A5F] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>{feat.title}</h3>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">{feat.description}</p>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-[#6A7B75]">{feat.description}</p>
               </div>
             </Link>
           </motion.div>

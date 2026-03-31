@@ -1,14 +1,14 @@
-import { Search, Sparkles } from "lucide-react";
+import { Search, Sparkles, ArrowRight, Zap } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/hero-bg.jpg"; // Keep if it's a generic image, but will lower opacity heavily
 
 const floatingTags = [
-  { label: "React", x: "10%", y: "20%", delay: 0 },
-  { label: "Tailwind", x: "80%", y: "15%", delay: 0.5 },
-  { label: "TypeScript", x: "85%", y: "75%", delay: 1 },
-  { label: "Next.js", x: "5%", y: "70%", delay: 1.5 },
+  { label: "⚡ Next.js", x: "8%", y: "22%", delay: 0 },
+  { label: "🎨 Flutter", x: "78%", y: "14%", delay: 0.5 },
+  { label: "🔷 TypeScript", x: "83%", y: "72%", delay: 1 },
+  { label: "🌿 Laravel", x: "4%", y: "68%", delay: 1.5 },
 ];
 
 const rotatingWords = ["modern builders.", "startup founders.", "creative devs.", "product teams."];
@@ -22,30 +22,25 @@ const HeroSection = () => {
   const navigate = useNavigate();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
 
   useEffect(() => {
     const currentWord = rotatingWords[wordIndex];
-    const speed = isDeleting ? 40 : 80;
-
+    const speed = isDeleting ? 35 : 75;
     const timeout = setTimeout(() => {
       if (!isDeleting) {
         setDisplayText(currentWord.slice(0, charIndex + 1));
-        setCharIndex((prev) => prev + 1);
-        if (charIndex + 1 === currentWord.length) {
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
+        setCharIndex(p => p + 1);
+        if (charIndex + 1 === currentWord.length) setTimeout(() => setIsDeleting(true), 2200);
       } else {
         setDisplayText(currentWord.slice(0, charIndex - 1));
-        setCharIndex((prev) => prev - 1);
+        setCharIndex(p => p - 1);
         if (charIndex - 1 === 0) {
           setIsDeleting(false);
-          setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+          setWordIndex(p => (p + 1) % rotatingWords.length);
         }
       }
     }, speed);
-
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, wordIndex]);
 
@@ -55,147 +50,183 @@ const HeroSection = () => {
   };
 
   return (
-    <section ref={ref} className="relative overflow-hidden py-28 md:py-40">
-      {/* Parallax Background */}
+    <section ref={ref} className="relative overflow-hidden py-28 md:py-44 noise-overlay">
+      {/* Background */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
-        <img src={heroBg} alt="" className="h-[120%] w-full object-cover opacity-30" />
-        <div className="absolute inset-0 gradient-hero opacity-95" />
+        <img src={heroBg} alt="" className="h-[120%] w-full object-cover opacity-5 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-transparent" />
       </motion.div>
 
-      {/* Animated dot pattern overlay */}
-      <div className="absolute inset-0 dot-pattern opacity-20" />
+      {/* Grid pattern */}
+      <div className="absolute inset-0 grid-pattern opacity-100 mix-blend-multiply" />
 
-      {/* Animated gradient orbs */}
+      {/* Ambient glow orbs mapping to new palette */}
       <motion.div
-        className="absolute -left-32 -top-32 h-96 w-96 rounded-full opacity-15"
-        style={{ background: "radial-gradient(circle, hsl(213 94% 68%), transparent 70%)" }}
-        animate={{ scale: [1, 1.2, 1], x: [0, 30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full opacity-10"
-        style={{ background: "radial-gradient(circle, hsl(217 91% 60%), transparent 70%)" }}
-        animate={{ scale: [1.2, 1, 1.2], x: [0, -20, 0], y: [0, 30, 0] }}
+        className="absolute -left-48 -top-48 h-[600px] w-[600px] rounded-full opacity-30 animate-pulse-glow"
+        style={{ background: "radial-gradient(circle, #2D7A5F 0%, transparent 65%)" }}
+        animate={{ scale: [1, 1.1, 1], x: [0, 20, 0], y: [0, -10, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
+      <motion.div
+        className="bg-glow -bottom-40 -right-40"
+        animate={{ scale: [1.1, 1, 1.1], x: [0, -20, 0], y: [0, 25, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Deep premium background mesh is handled globally, so just keep the overlays for extra depth */}
+      <div className="absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+        <div className="bg-glow" />
+        <div className="bg-glow-orange opacity-40" />
+      </div>
 
-      {/* Floating tags */}
+      {/* Floating tech tags */}
       {floatingTags.map((tag) => (
         <motion.div
           key={tag.label}
-          className="absolute hidden rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary/70 backdrop-blur-sm md:block"
+          className="absolute hidden rounded-2xl border border-black/5 bg-white/40 px-4 py-2 text-xs font-semibold text-[#1F403A] backdrop-blur-md shadow-soft md:block"
           style={{ left: tag.x, top: tag.y }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.5, scale: 1, y: [0, -8, 0] }}
-          transition={{ delay: tag.delay + 0.8, duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: [0.7, 1, 0.7], scale: 1, y: [0, -12, 0] }}
+          transition={{ delay: tag.delay + 0.6, duration: 6, repeat: Infinity, ease: "easeInOut" }}
         >
           {tag.label}
         </motion.div>
       ))}
 
-      <motion.div className="container relative z-10" style={{ opacity }}>
+      <motion.div className="container relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-2xl text-center"
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto max-w-3xl text-center"
         >
+          {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur-sm"
+            className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-[#2D7A5F]/15 bg-white/40 px-5 py-2.5 text-xs font-semibold text-[#1F403A] backdrop-blur-md shadow-soft"
           >
-            <Sparkles className="h-3.5 w-3.5" />
+            <Sparkles className="h-4 w-4 text-[#2D7A5F]" />
             <span>4,821 curated products · Verified by engineers</span>
+            <Zap className="h-3.5 w-3.5 text-amber-500 opacity-80" />
           </motion.div>
 
+          {/* Headline */}
           <motion.h1
-            className="mb-5 font-display text-4xl font-bold tracking-tight text-foreground md:text-6xl md:leading-[1.1]"
-            initial={{ opacity: 0, y: 20 }}
+            className="mb-6 text-4xl font-extrabold tracking-tight text-[#1F403A] md:text-6xl md:leading-[1.1] lg:text-7xl"
+            style={{ fontFamily: 'Poppins, sans-serif' }}
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             Need code?{" "}
-            <span className="relative inline-block">
-              <span className="text-gradient">{displayText}</span>
+            <br className="hidden sm:block" />
+            <span className="relative inline-block mt-2">
+              <span className="text-gradient drop-shadow-sm">{displayText}</span>
               <motion.span
-                className="ml-0.5 inline-block h-[0.9em] w-[3px] translate-y-[0.1em] rounded-full bg-primary align-middle"
+                className="ml-1 inline-block h-[0.8em] w-[4px] translate-y-[0.1em] rounded-full bg-[#2D7A5F] align-middle"
                 animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.6, repeat: Infinity, repeatType: "reverse" }}
+                transition={{ duration: 0.55, repeat: Infinity, repeatType: "reverse" }}
               />
-              <span className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-gradient-to-r from-primary via-primary-glow to-primary opacity-50" />
             </span>
           </motion.h1>
 
+          {/* Subtext */}
           <motion.p
-            className="mb-10 text-base text-muted-foreground md:text-lg"
+            className="mb-10 text-[17px] font-semibold text-[#1F403A]/80 md:text-[19px] leading-relaxed max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
             Web templates, mobile apps, themes & graphics — buy or sell
             <br className="hidden sm:block" />
-            on the safest and fastest digital platform.
+            on the safest and fastest digital marketplace.
           </motion.p>
 
+          {/* Search */}
           <motion.form
             onSubmit={handleSearch}
-            className="relative mx-auto max-w-lg"
+            className="relative mx-auto max-w-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
+            transition={{ delay: 0.65, duration: 0.6 }}
           >
             <div className="group relative">
-              <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary/30 via-primary-glow/15 to-primary/30 opacity-0 blur transition-opacity duration-500 group-focus-within:opacity-100" />
-              <div className="relative flex items-center rounded-xl border border-border bg-card shadow-elevated">
-                <Search className="ml-4 h-5 w-5 text-muted-foreground" />
+              <div className="absolute -inset-[3px] rounded-2xl bg-[#2D7A5F]/10 opacity-0 blur-md transition-opacity duration-500 group-focus-within:opacity-100" />
+              <div className="flex h-16 w-full items-center gap-3 rounded-[20px] bg-white/85 p-2 shadow-[0_10px_40px_-10px_rgba(31,64,58,0.1)] backdrop-blur-2xl border border-white transition-all focus-within:ring-2 focus-within:ring-[#2D7A5F]/30 focus-within:bg-white/95">
+                <Search className="ml-4 h-6 w-6 text-[#1F403A]/60" />
                 <input
                   type="text"
+                  placeholder="Search templates, UI kits, plugins..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="What are you looking for? e.g. Next.js multi-vendor..."
-                  className="w-full bg-transparent py-4 pl-3 pr-4 text-[15px] text-foreground outline-none placeholder:text-muted-foreground"
+                  className="h-full flex-1 bg-transparent px-2 text-[16px] font-medium text-[#1F403A] outline-none placeholder:text-[#1F403A]/40"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch(e);
+                    }
+                  }}
                 />
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mr-2 rounded-lg gradient-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-shadow hover:shadow-lg"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="mr-2.5 flex items-center gap-2 rounded-xl bg-[#2D7A5F] px-6 py-3 text-[15px] font-bold text-white shadow-glow transition-all hover:bg-[#236B50] hover:shadow-lg"
                 >
                   Search
+                  <ArrowRight className="h-4 w-4" />
                 </motion.button>
               </div>
             </div>
           </motion.form>
 
+          {/* Tag filters */}
           <motion.div
-            className="mt-6 flex flex-wrap items-center justify-center gap-2"
+            className="mt-8 flex flex-wrap items-center justify-center gap-2.5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.5 }}
+            transition={{ delay: 0.88, duration: 0.5 }}
           >
-            <span className="text-xs text-muted-foreground">Popular:</span>
+            <span className="text-[13px] text-[#1F403A] font-bold tracking-wider uppercase mr-2.5 opacity-90">Trending:</span>
             {["WordPress", "Next.js", "Flutter", "Tailwind", "Laravel"].map((tag, i) => (
               <motion.button
                 key={tag}
                 onClick={() => { setQuery(tag); navigate(`/products?q=${encodeURIComponent(tag)}`); }}
-                className="rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:bg-primary/10 hover:text-primary"
-                whileHover={{ scale: 1.05, y: -1 }}
+                className="relative overflow-hidden rounded-full bg-white/85 backdrop-blur-md px-5 py-2 text-[13px] font-bold text-[#1F403A] shadow-sm ring-1 ring-white transition-all duration-300 hover:ring-[#2D7A5F]/40 hover:bg-white hover:text-[#2D7A5F] hover:shadow-md"
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 + i * 0.1 }}
+                transition={{ delay: 1 + i * 0.08 }}
               >
                 {tag}
               </motion.button>
             ))}
           </motion.div>
+
+          {/* Stats row */}
+          <motion.div
+            className="mt-14 flex items-center justify-center gap-10"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3, duration: 0.5 }}
+          >
+            {[
+              { value: "4.8K+", label: "Premium Products" },
+              { value: "1.2K+", label: "Verified Vendors" },
+              { value: "98%", label: "Customer Satisfaction" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-2xl font-black text-[#1F403A]" style={{ fontFamily: 'Poppins, sans-serif' }}>{stat.value}</div>
+                <div className="text-[14px] font-bold text-[#1F403A]/70 mt-1">{stat.label}</div>
+              </div>
+            ))}
+          </motion.div>
         </motion.div>
       </motion.div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--background)] to-transparent" />
     </section>
   );
 };

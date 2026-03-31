@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 import { products as mockProducts } from "@/data/mockData";
 
 const FeaturedProducts = () => {
-  const { data: dbProducts, isLoading } = useProducts({ featured: true });
-  const featured = dbProducts?.length ? dbProducts : mockProducts.filter(p => p.featured);
+  const { data: dbProducts, isLoading } = useProducts({});
+  const featured = dbProducts?.length ? dbProducts.slice(0, 12) : mockProducts.slice(0, 12);
 
   return (
     <section className="relative py-20">
@@ -26,7 +26,7 @@ const FeaturedProducts = () => {
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
               <Zap className="h-3 w-3" /> Hand-picked
             </div>
-            <h2 className="font-display text-2xl font-bold md:text-3xl">Featured Products</h2>
+            <h2 className="font-display text-2xl font-extrabold md:text-3xl text-[#1F403A]" style={{ fontFamily: 'Poppins, sans-serif' }}>Products</h2>
             <p className="mt-1 text-sm text-muted-foreground">Curated by our engineering team</p>
           </div>
           <Link to="/products" className="group flex items-center gap-1.5 text-sm font-medium text-primary transition-all hover:gap-2.5">
@@ -36,7 +36,7 @@ const FeaturedProducts = () => {
 
         {isLoading ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
+            {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="h-80 animate-pulse rounded-xl bg-muted shimmer" />
             ))}
           </div>

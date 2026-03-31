@@ -20,6 +20,7 @@ const footerLinks = [
       { label: "Contact Us", to: "/page/contact" },
       { label: "FAQ", to: "/page/faq" },
       { label: "Privacy Policy", to: "/page/privacy" },
+      { label: "Refund Policy", to: "/page/refund-policy" },
       { label: "Terms of Service", to: "/page/terms" },
       { label: "Sell Products", to: "/vendor" },
     ],
@@ -30,8 +31,8 @@ const Footer = () => {
   const [email, setEmail] = useState("");
 
   return (
-    <footer className="relative border-t border-border bg-card overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-64 w-[600px] rounded-full bg-primary/5 blur-[100px]" />
+    <footer className="relative border-t border-white/60 bg-white/40 glass-strong overflow-hidden mt-10">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-64 w-[600px] rounded-full bg-[#1F403A]/5 blur-[120px]" />
 
       <div className="container relative py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
@@ -42,16 +43,16 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Link to="/" className="mb-5 flex items-center gap-2.5 font-display text-lg font-bold">
-              <img src="/hunny-it-logo-1.jpeg" alt="Hunny IT" className="h-8 w-8 rounded-lg object-cover" />
+            <Link to="/" className="mb-5 flex items-center gap-2.5 font-display text-xl font-bold text-[#1F403A]">
+              <img src="/hunny-it-logo-1.jpeg" alt="Hunny IT" className="h-9 w-9 rounded-xl object-cover shadow-sm" />
               Hunny IT
             </Link>
-            <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
+            <p className="mb-5 text-[14px] leading-relaxed text-[#6A7B75]">
               The largest digital marketplace. Buy, sell, and succeed with premium code.
             </p>
-            <div className="flex flex-col gap-2.5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary" /> Bangladesh</span>
-              <span className="flex items-center gap-2"><Mail className="h-3.5 w-3.5 text-primary" /> contact@hunnyit.com</span>
+            <div className="flex flex-col gap-2.5 text-[13px] text-[#1F403A] font-medium">
+              <span className="flex items-center gap-2.5"><MapPin className="h-4 w-4 text-[#2D7A5F]" /> Bangladesh</span>
+              <span className="flex items-center gap-2.5"><Mail className="h-4 w-4 text-[#2D7A5F]" /> contact@hunnyit.com</span>
             </div>
           </motion.div>
 
@@ -64,16 +65,16 @@ const Footer = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: (i + 1) * 0.1 }}
             >
-              <h4 className="mb-4 text-sm font-semibold">{section.title}</h4>
-              <nav className="flex flex-col gap-2.5">
+              <h4 className="mb-5 text-[15px] font-bold text-[#1F403A]">{section.title}</h4>
+              <nav className="flex flex-col gap-3">
                 {section.links.map((link) => (
                   <Link
                     key={link.label}
                     to={link.to}
-                    className="group flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="group flex items-center gap-1.5 text-[14px] text-[#6A7B75] font-medium transition-colors hover:text-[#2D7A5F]"
                   >
                     {link.label}
-                    <ArrowUpRight className="h-3 w-3 opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Link>
                 ))}
               </nav>
@@ -87,30 +88,30 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h4 className="mb-4 text-sm font-semibold">Newsletter</h4>
-            <p className="mb-4 text-xs text-muted-foreground">Stay updated with new products & offers!</p>
-            <div className="flex overflow-hidden rounded-lg border border-border bg-surface">
+            <h4 className="mb-5 text-[15px] font-bold text-[#1F403A]">Newsletter</h4>
+            <p className="mb-4 text-[13px] font-medium text-[#6A7B75]">Stay updated with new products & offers!</p>
+            <div className="flex overflow-hidden rounded-2xl bg-white/60 p-1.5 shadow-sm border border-white focus-within:ring-2 focus-within:ring-[#2D7A5F]/20 transition-all focus-within:bg-white/90">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email"
-                className="flex-1 bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-muted-foreground"
+                className="flex-1 bg-transparent px-3 text-[14px] font-medium text-[#1F403A] outline-none placeholder:text-[#6A7B75]/70"
               />
-              <button className="gradient-primary px-3 text-primary-foreground transition-all hover:opacity-90">
+              <button className="btn-primary px-5 py-2.5 text-[14px] font-bold">
                 <Send className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">Follow us on</p>
-            <div className="mt-2 flex gap-3">
+            <p className="mt-5 text-[13px] font-semibold text-[#1F403A]">Follow us on</p>
+            <div className="mt-3 flex gap-3.5">
               {["Twitter", "GitHub", "Discord", "YouTube"].map((social) => (
                 <motion.a
                   key={social}
                   href="#"
-                  className="text-xs text-muted-foreground transition-colors hover:text-primary"
-                  whileHover={{ y: -2 }}
+                  className="rounded-lg bg-white/60 p-2 text-[#6A7B75] shadow-sm transition-all hover:bg-[#2D7A5F] hover:text-white"
+                  whileHover={{ y: -3 }}
                 >
-                  {social}
+                  <span className="text-[11px] font-bold uppercase tracking-wider">{social.substring(0,2)}</span>
                 </motion.a>
               ))}
             </div>
@@ -118,7 +119,7 @@ const Footer = () => {
         </div>
 
         <motion.div
-          className="mt-12 flex flex-wrap justify-center gap-3 border-t border-border pt-8 pb-4"
+          className="mt-14 flex flex-wrap justify-center gap-3.5 border-t border-black/5 pt-10 pb-4"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -128,18 +129,16 @@ const Footer = () => {
             { 
               name: "Visa", 
               element: (
-                <div className="flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center rounded-md bg-[#1A1F71] px-2.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#1A1F71]/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 66" className="h-auto w-full fill-white drop-shadow-sm">
-                    <path d="M81.53 1.58L54.83 64H28.11l16.3-62.42zm92.64.04c-4.62-2-12.97-3.87-23.49-3.87-15.07 0-25.7 7.91-25.75 19.26-.1 10 5.78 14.25 12.3 17.46 6.71 3.3 10.31 5.43 10.32 8.43 0 2.9-3.54 4.2-6.81 4.2-6.97 0-12.25-3.08-16.81-5.34L123.41 64C128.76 66.63 137.53 66.86 145.65 66.86 165.15 60.98 151.24 49.19 151.23 38.14 151.22 28.52 142.23 24.06 135.65 20.83 129.72 17.79 126.01 15.92 125.99 11.93 125.97 8.03 130.47 5.1 136.86 5.1 142.79 5.1 144.84 5.56 150.31 7.27zM113.88 23.2 96.07 64H77.12l-1.39-7.38h-22.1l-3.3 7.38H28.14l31.14-62.42h22.82l31.78 62.42zM61.9 44.2l10.3-27.67 5.92 27.67H61.9z"/>
-                  </svg>
+                <div className="flex h-[44px] w-[78px] shrink-0 cursor-pointer items-center justify-center rounded-xl bg-white px-2 shadow-sm border border-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[#1A1F71]/30">
+                  <span className="font-sans text-[1.25rem] font-black italic tracking-widest text-[#1A1F71] drop-shadow-sm transition-transform duration-300 hover:scale-105">VISA</span>
                 </div>
               )
             },
             { 
               name: "Mastercard", 
               element: (
-                <div className="flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center rounded-md bg-[#1C1C1E] px-2.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" className="h-[26px]">
+                <div className="flex h-[44px] w-[78px] shrink-0 cursor-pointer items-center justify-center rounded-xl bg-white px-2 shadow-sm border border-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[#eb001b]/30">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" className="h-[28px] drop-shadow-sm transition-transform duration-300 hover:scale-110">
                     <circle cx="150" cy="150" r="150" fill="#eb001b"/>
                     <circle cx="350" cy="150" r="150" fill="#f79e1a"/>
                     <path fill="#ff5f00" d="M250 279c30.5-35.4 49-103.6 49-129s-18.5-93.6-49-129c-30.5 35.4-49 103.6-49 129s18.5 93.6 49 129z"/>
@@ -150,24 +149,28 @@ const Footer = () => {
             { 
               name: "Amex", 
               element: (
-                <div className="flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center rounded-md bg-transparent px-1.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#2E77BC]/30">
-                  <div className="flex h-full w-full items-center justify-center rounded-[3px] bg-[#2E77BC]">
-                    <span className="font-sans text-[12px] font-black tracking-wider text-white">AMEX</span>
+                <div className="flex h-[44px] w-[78px] shrink-0 cursor-pointer items-center justify-center rounded-xl bg-white p-0 shadow-sm border border-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[#2E77BC]/30">
+                  <div className="flex h-[34px] w-[64px] items-center justify-center rounded bg-[#2E77BC] transition-transform duration-300 hover:scale-105">
+                    <span className="font-sans text-[11px] font-black tracking-[0.15em] text-white drop-shadow-sm">AMEX</span>
                   </div>
                 </div>
               )
             },
-            ...[
-              { name: "Alrajhi Capital", src: "/gateways/logo-1.png" },
-              { name: "STC Bank", src: "/gateways/logo-2.png" },
-              { name: "SNB", src: "/gateways/logo-3.png" },
-              { name: "Bank Muscat", src: "/gateways/logo-4.png" },
-              { name: "Maybank", src: "/gateways/logo-5.png" },
-            ].map(pm => ({
+            ...([
+              { name: "Alrajhi Capital", src: "/gateways/alrajhi.svg" },
+              { name: "STC Bank", src: "/gateways/stc.svg" },
+              { name: "SNB", src: "/gateways/snb.svg" },
+              { name: "Bank Muscat", src: "/gateways/bankmuscat.svg" },
+              { name: "Maybank", src: "/gateways/maybank.svg" },
+            ] as const).map(pm => ({
               name: pm.name,
               element: (
-                <div className="group flex h-[42px] w-[76px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-md bg-white p-1.5 shadow-sm ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-primary/20">
-                  <img src={pm.src} alt={pm.name} className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110 drop-shadow-sm" />
+                <div className="group flex h-[44px] w-[78px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm border border-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[#2D7A5F]/30">
+                  <img 
+                    src={pm.src} 
+                    alt={pm.name} 
+                    className="h-[65%] w-[65%] object-contain transition-transform duration-300 group-hover:scale-110" 
+                  />
                 </div>
               )
             }))
@@ -185,10 +188,11 @@ const Footer = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
         >
-          <p className="text-xs text-muted-foreground">© 2026 HunnyCoders. All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link to="/page/privacy" className="text-xs text-muted-foreground transition-colors hover:text-foreground">Privacy Policy</Link>
-            <Link to="/page/terms" className="text-xs text-muted-foreground transition-colors hover:text-foreground">Terms of Service</Link>
+          <p className="text-[13px] font-medium text-[#6A7B75]">© 2026 HunnyCoders. All rights reserved.</p>
+          <div className="flex gap-5">
+            <Link to="/page/privacy" className="text-[13px] font-medium text-[#6A7B75] transition-colors hover:text-[#2D7A5F]">Privacy Policy</Link>
+            <Link to="/page/refund-policy" className="text-[13px] font-medium text-[#6A7B75] transition-colors hover:text-[#2D7A5F]">Refund Policy</Link>
+            <Link to="/page/terms" className="text-[13px] font-medium text-[#6A7B75] transition-colors hover:text-[#2D7A5F]">Terms of Service</Link>
           </div>
         </motion.div>
       </div>

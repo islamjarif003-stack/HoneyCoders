@@ -111,4 +111,47 @@ router.post(
   }
 );
 
+// Bulk Upload JSON
+router.post("/products/bulk", authenticate, async (req: AuthRequest, res) => {
+  try {
+    const products = req.body;
+    if (!Array.isArray(products)) {
+        return res.status(400).json({ message: "Expected array of products" });
+    }
+    
+    let insertedCount = 0;
+    const { rows: categories } = await query("SELECT id, name FROM categories");
+    const catMap: Record<string, string> = {};
+    categories.forEach(c => catMap[c.name] = c.id);
+    
+    for (const p of products) {
+      const slug = p.slug || (p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 5));
+      const catId = catMap[p.category] || null;
+      
+      const { rows } = await query(
+        `INSERT INTO products (title, slug, description, price, category_id, vendor_id, status, featured, thumbnail_url, version, tags, sales_count)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+         ON CONFLICT (slug) DO UPDATE SET thumbnail_url = $9, price = $4
+         RETURNING id`,
+        [p.title, slug, p.description || null, Number(p.price) || 0, catId, req.userId, p.status || "approved", p.featured || false, p.thumbnail || p.thumbnail_url || null, p.version || "1.0.0", p.tags || [], p.salesCount || 0]
+      );
+      
+      const pId = rows[0].id;
+      
+      // Handle screenshots
+      if (p.screenshots && Array.isArray(p.screenshots)) {
+        await query("DELETE FROM product_screenshots WHERE product_id = $1", [pId]);
+        for (let i = 0; i < p.screenshots.length; i++) {
+          await query("INSERT INTO product_screenshots (product_id, url, sort_order) VALUES ($1, $2, $3)", [pId, p.screenshots[i], i]);
+        }
+      }
+      insertedCount++;
+    }
+    
+    res.json({ message: `Successfully bulk uploaded ${insertedCount} products` });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;

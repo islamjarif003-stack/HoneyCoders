@@ -229,16 +229,16 @@ const ProductDetail = () => {
                   <span className="text-xs tabular-nums text-muted-foreground">{Number(salesCount).toLocaleString()} sales</span>
                 </div>
                 <div className="mt-6">
-                  <span className="text-3xl font-bold tabular-nums text-gradient">${price}</span>
+                  <span className="text-3xl font-bold tabular-nums text-[#1F403A]">${price}</span>
                 </div>
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" onClick={handleBuy} className="mt-5 w-full gradient-primary text-primary-foreground shadow-glow transition-shadow hover:shadow-lg text-base">
+                  <Button size="lg" onClick={handleBuy} className="mt-5 w-full bg-[#10b981] hover:bg-[#059669] text-white shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] transition-all hover:shadow-lg text-base">
                     <Sparkles className="mr-2 h-4 w-4" /> Buy Now
                   </Button>
                 </motion.div>
                 <div className="mt-3 flex gap-2">
                   <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <Button variant="outline" className="w-full hover:border-primary/30 hover:shadow-glow transition-all" onClick={handleWishlist}>
+                    <Button variant="outline" className="w-full hover:bg-[#2D7A5F] hover:text-white hover:border-[#2D7A5F] active:bg-[#236B50] transition-all" onClick={handleWishlist}>
                       <Heart className="mr-1.5 h-4 w-4" />Wishlist
                     </Button>
                   </motion.div>

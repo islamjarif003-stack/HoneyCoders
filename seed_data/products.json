@@ -1,51 +1,4 @@
-export interface Product {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  price: number;
-  category: string;
-  tags: string[];
-  rating: number;
-  reviewCount: number;
-  salesCount: number;
-  vendor: { name: string; avatar: string };
-  thumbnail: string;
-  screenshots: string[];
-  version: string;
-  lastUpdated: string;
-  featured: boolean;
-}
-
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  count: number;
-  icon: string;
-}
-
-export const categories: Category[] = [
-  { id: "1", name: "React Templates", slug: "react-templates", count: 842, icon: "Code2" },
-  { id: "2", name: "UI Kits", slug: "ui-kits", count: 534, icon: "Palette" },
-  { id: "3", name: "Dashboard Themes", slug: "dashboard-themes", count: 391, icon: "LayoutDashboard" },
-  { id: "4", name: "Landing Pages", slug: "landing-pages", count: 267, icon: "Monitor" },
-  { id: "5", name: "Admin Panels", slug: "admin-panels", count: 198, icon: "Settings" },
-  { id: "6", name: "Mobile Kits", slug: "mobile-kits", count: 156, icon: "Smartphone" },
-  { id: "7", name: "Icons & Graphics", slug: "icons-graphics", count: 723, icon: "Image" },
-  { id: "8", name: "Backend Modules", slug: "backend-modules", count: 312, icon: "Server" },
-];
-
-const thumbnails = [
-  "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=375&fit=crop",
-  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=375&fit=crop",
-  "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=600&h=375&fit=crop",
-  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=375&fit=crop",
-  "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&h=375&fit=crop",
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=375&fit=crop",
-];
-
-export const products: Product[] = [
+[
   {
     "id": "1",
     "title": "Startup Template 1",
@@ -1496,4 +1449,4 @@ export const products: Product[] = [
     "lastUpdated": "2025-12-08",
     "featured": false
   }
-];
+]

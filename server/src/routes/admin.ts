@@ -34,6 +34,34 @@ router.patch("/products/:id/status", async (req, res) => {
   }
 });
 
+// Full product update
+router.put("/products/:id", async (req, res) => {
+  try {
+    const { title, description, price, category_id, status, featured, thumbnail_url, version, tags } = req.body;
+    const updates: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (title !== undefined) { updates.push(`title = $${idx++}`); values.push(title); }
+    if (description !== undefined) { updates.push(`description = $${idx++}`); values.push(description); }
+    if (price !== undefined) { updates.push(`price = $${idx++}`); values.push(Number(price)); }
+    if (category_id !== undefined) { updates.push(`category_id = $${idx++}`); values.push(category_id || null); }
+    if (status !== undefined) { updates.push(`status = $${idx++}`); values.push(status); }
+    if (featured !== undefined) { updates.push(`featured = $${idx++}`); values.push(featured); }
+    if (thumbnail_url !== undefined) { updates.push(`thumbnail_url = $${idx++}`); values.push(thumbnail_url); }
+    if (version !== undefined) { updates.push(`version = $${idx++}`); values.push(version); }
+    if (tags !== undefined) { updates.push(`tags = $${idx++}`); values.push(Array.isArray(tags) ? tags : tags.split(",").map((t: string) => t.trim()).filter(Boolean)); }
+
+    if (!updates.length) return res.status(400).json({ message: "No fields to update" });
+
+    values.push(req.params.id);
+    await query(`UPDATE products SET ${updates.join(", ")} WHERE id = $${idx}`, values);
+    res.json({ success: true });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // All orders
 router.get("/orders", async (_req, res) => {
   try {

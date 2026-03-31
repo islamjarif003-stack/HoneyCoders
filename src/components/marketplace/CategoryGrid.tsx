@@ -28,8 +28,8 @@ const CategoryGrid = () => {
             <h2 className="font-display text-2xl font-bold">Browse by Category</h2>
             <p className="mt-2 text-sm text-muted-foreground">Find the perfect starting point for your next project</p>
           </div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, i) => (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="h-24 animate-pulse rounded-xl bg-muted shimmer" />
             ))}
           </div>
@@ -52,30 +52,30 @@ const CategoryGrid = () => {
           <p className="mt-2 text-sm text-muted-foreground">Find the perfect starting point for your next project</p>
         </motion.div>
         <motion.div
-          className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4"
+          className="grid grid-cols-2 gap-4 sm:grid-cols-3"
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-50px" }}
         >
-          {categories?.map((cat) => {
+          {categories?.slice(0, 6).map((cat) => {
             const Icon = iconMap[cat.icon || "Code2"] || Code2;
             return (
               <motion.div key={cat.id} variants={item}>
                 <Link
                   to={`/products?category=${cat.slug}`}
-                  className="group relative flex items-center gap-3.5 overflow-hidden rounded-xl border border-border bg-card p-5 shadow-ink transition-all duration-300 hover:shadow-elevated hover:border-primary/20"
+                  className="card group relative flex items-center gap-4 overflow-hidden p-5 transition-all duration-300 hover:shadow-elevated hover:border-[#2D7A5F]/20 hover:-translate-y-1"
                 >
                   {/* Hover gradient bg */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 transition-all duration-500 group-hover:from-primary/5 group-hover:to-primary/0" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#2D7A5F]/0 to-[#2D7A5F]/0 transition-all duration-500 group-hover:from-[#2D7A5F]/5 group-hover:to-transparent" />
                   <motion.div
-                    className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/8 text-primary transition-all duration-300 group-hover:gradient-primary group-hover:text-primary-foreground group-hover:shadow-glow"
-                    whileHover={{ rotate: 5 }}
+                    className="relative flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-xl bg-white/60 text-[#1F403A] border border-black/5 shadow-sm transition-all duration-300 group-hover:bg-[#2D7A5F] group-hover:text-white group-hover:shadow-glow group-hover:border-[#2D7A5F]"
+                    whileHover={{ rotate: 5, scale: 1.05 }}
                   >
                     <Icon className="h-5 w-5" />
                   </motion.div>
                   <div className="relative">
-                    <p className="text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors">{cat.name}</p>
+                    <p className="text-[15px] font-bold text-[#1F403A] group-hover:text-[#2D7A5F] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>{cat.name}</p>
                   </div>
                 </Link>
               </motion.div>

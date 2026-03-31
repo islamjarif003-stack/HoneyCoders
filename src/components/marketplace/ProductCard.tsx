@@ -1,4 +1,4 @@
-import { Star, Eye } from "lucide-react";
+import { Star, Eye, TrendingUp, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -35,71 +35,104 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -6 }}
-      className="group"
+      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="group h-full"
     >
-      <Link to={`/product/${product.slug}`} className="block">
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-ink transition-all duration-500 group-hover:shadow-elevated group-hover:border-primary/20">
-          <div className="relative aspect-[16/10] overflow-hidden">
+      <Link to={`/product/${product.slug}`} className="block h-full outline-none">
+        <div className="card hover-lift h-full flex flex-col p-2">
+          
+          {/* Inner Image Container */ }
+          <div className="relative aspect-[16/10] overflow-hidden rounded-[14px] bg-white ring-1 ring-black/5">
             <motion.img
               src={thumbnail}
               alt={product.title}
               className="h-full w-full object-cover"
-              whileHover={{ scale: 1.08 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             />
+            {/* Soft inset shadow for lighting */}
+            <div className="pointer-events-none absolute inset-0 rounded-[14px] shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)]" />
+            
             {/* Hover overlay */}
-            <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 transition-all duration-500 group-hover:bg-foreground/30">
+            <div className="absolute inset-0 flex items-center justify-center bg-transparent transition-all duration-400 group-hover:bg-[#1F403A]/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100">
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileHover={{ opacity: 1, scale: 1 }}
-                className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                initial={{ scale: 0.9, opacity: 0 }}
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-2 rounded-full bg-white/95 px-6 py-3 text-[14px] font-bold text-[#1F403A] shadow-elevated border border-white"
               >
-                <div className="flex items-center gap-2 rounded-full bg-surface/90 px-4 py-2 text-sm font-medium text-foreground shadow-elevated backdrop-blur-sm">
-                  <Eye className="h-4 w-4" /> Preview
-                </div>
+                <Eye className="h-4 w-4 text-[#2D7A5F]" /> Quick View
               </motion.div>
             </div>
-            <div className="pointer-events-none absolute inset-0 rounded-t-xl ring-1 ring-inset ring-foreground/5" />
+            
+            {/* Featured badge */}
             {product.featured && (
               <motion.span
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.08 + 0.3 }}
-                className="absolute left-3 top-3 rounded-full gradient-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-glow"
+                className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-md border border-white px-3 py-1.5 text-[11px] font-bold text-[#1F403A] shadow-sm transform-gpu transition-all hover:scale-105"
               >
-                ✨ Featured
+                <Star className="h-3 w-3 fill-amber-500 text-amber-500" /> Featured
               </motion.span>
             )}
+            
+            {/* Sales count */}
+            {salesCount > 0 && (
+              <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-bold text-[#1F403A] backdrop-blur-md shadow-sm border border-white">
+                <TrendingUp className="h-3 w-3 text-[#2D7A5F]" />
+                {Number(salesCount).toLocaleString()}
+              </span>
+            )}
           </div>
-          <div className="p-4">
-            <div className="mb-1.5">
-              <span className="rounded-full bg-primary/8 px-2 py-0.5 text-[11px] font-medium tracking-wide uppercase text-primary">{category}</span>
-            </div>
-            <h3 className="mb-1.5 line-clamp-1 text-[15px] font-semibold text-card-foreground transition-colors group-hover:text-primary">{product.title}</h3>
-            <p className="mb-3 line-clamp-2 text-[13px] leading-relaxed text-muted-foreground">{product.description}</p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <div className="flex gap-0.5">
+
+          {/* Content Area */}
+          <div className="flex flex-1 flex-col px-4 pt-5 pb-3">
+            {category && (
+              <div className="mb-3">
+                <span className="inline-flex items-center rounded-md bg-[#6A7B75]/10 px-2.5 py-1 text-[11px] font-bold tracking-widest uppercase text-[#6A7B75]">
+                  {category}
+                </span>
+              </div>
+            )}
+
+            <h3 className="mb-2 line-clamp-1 text-[17px] font-extrabold text-[#1F403A] transition-colors duration-200 group-hover:text-[#10b981] leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              {product.title}
+            </h3>
+            
+            <p className="mb-6 line-clamp-2 text-[14px] leading-[1.6] text-[#6A7B75] flex-1 font-medium">
+              {product.description}
+            </p>
+
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="flex gap-0.5 mb-1">
                   {[1, 2, 3, 4, 5].map(s => (
-                    <Star key={s} className={`h-3 w-3 ${s <= (rating || 0) ? "fill-amber-400 text-amber-400" : "text-border"}`} />
+                    <Star
+                      key={s}
+                      className={`h-[15px] w-[15px] ${s <= rating ? "fill-amber-400 text-amber-400" : "fill-[#E8E2D7] text-[#E8E2D7]"}`}
+                    />
                   ))}
                 </div>
-                {reviewCount > 0 && <span className="text-[11px] text-muted-foreground">({reviewCount})</span>}
+                {reviewCount > 0 && (
+                  <span className="text-[12px] font-semibold text-[#6A7B75]">({reviewCount} reviews)</span>
+                )}
               </div>
+              
               <motion.span
-                className="rounded-lg gradient-primary px-3 py-1 text-sm font-bold text-primary-foreground shadow-sm"
+                className="bg-[#10b981] text-white shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] transition-colors hover:bg-[#059669] rounded-lg px-5 py-2 text-[16px] font-black tracking-tight"
                 whileHover={{ scale: 1.05 }}
               >
                 ${product.price}
               </motion.span>
             </div>
-            <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-[11px] text-muted-foreground">
-              <span className="font-medium">{vendorName}</span>
-              <span className="tabular-nums">{Number(salesCount).toLocaleString()} sales</span>
+
+            <div className="mt-5 flex items-center justify-between border-t border-black/5 pt-4 text-[13px] font-bold text-[#B9AC9B]">
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-5 rounded-full bg-[#1F403A]/10 flex items-center justify-center text-[10px] text-[#1F403A]">
+                  {vendorName.charAt(0)}
+                </div>
+                <span className="truncate text-[#1F403A]">{vendorName}</span>
+              </div>
+              <span className="text-[#6A7B75]">{Number(salesCount).toLocaleString()} sales</span>
             </div>
           </div>
         </div>
