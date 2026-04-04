@@ -1,0 +1,2 @@
+ALTER USER postgres WITH PASSWORD '12580';
+CREATE DATABASE sourcestack;
